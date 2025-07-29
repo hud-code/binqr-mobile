@@ -17,8 +17,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.binqr.app",
-    config: {
-      usesNonExemptEncryption: false
+    icon: "./assets/icon.png",
+    buildNumber: "1",
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+      CFBundleDisplayName: "BinQR"
     }
   },
   android: {
@@ -27,6 +30,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     package: "com.binqr.app",
+    icon: "./assets/icon.png",
   },
   web: {
     favicon: "./assets/favicon.png",
