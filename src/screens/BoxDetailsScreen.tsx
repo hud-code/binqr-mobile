@@ -16,6 +16,8 @@ import * as ImagePicker from "expo-image-picker";
 import QRCode from "react-native-qrcode-svg";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
 
 import {
   getStoredLocations,
@@ -39,6 +41,8 @@ export default function BoxDetailsScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
   useEffect(() => {
     loadLocations();
@@ -143,34 +147,32 @@ export default function BoxDetailsScreen() {
   };
 
   const handleDeleteBox = () => {
-    Alert.alert(
-      "Delete Box",
-      `Are you sure you want to delete "${editedBox.name}"? This action cannot be undone.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            setIsLoading(true);
-            try {
-              const success = await deleteBox(editedBox.id);
-              if (success) {
-                Alert.alert("Success", "Box deleted successfully!", [
-                  { text: "OK", onPress: () => navigation.goBack() }
-                ]);
-              } else {
-                Alert.alert("Error", "Failed to delete box");
-              }
-            } catch (error) {
-              Alert.alert("Error", "Failed to delete box");
-            } finally {
-              setIsLoading(false);
-            }
-          },
-        },
-      ]
-    );
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteBox = async () => {
+    if (deleteConfirmText !== editedBox.name) {
+      Alert.alert("Error", "Box name does not match. Please type the exact box name to confirm deletion.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const success = await deleteBox(editedBox.id);
+      if (success) {
+        Alert.alert("Success", "Box deleted successfully!", [
+          { text: "OK", onPress: () => navigation.goBack() }
+        ]);
+      } else {
+        Alert.alert("Error", "Failed to delete box");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to delete box");
+    } finally {
+      setIsLoading(false);
+      setShowDeleteConfirm(false);
+      setDeleteConfirmText("");
+    }
   };
 
   const handleGenerateNewQR = () => {
@@ -213,6 +215,104 @@ export default function BoxDetailsScreen() {
     }
   };
 
+  const handlePrintQR = async () => {
+    try {
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>BinQR - ${editedBox.name}</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 40px;
+                margin: 0;
+              }
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+              }
+              .title {
+                font-size: 32px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #2563eb;
+              }
+              .box-name {
+                font-size: 24px;
+                margin-bottom: 30px;
+                color: #333;
+              }
+              .qr-container {
+                margin: 40px 0;
+                padding: 20px;
+                border: 2px solid #e5e7eb;
+                border-radius: 12px;
+                background: #f9f9f9;
+              }
+              .qr-code {
+                margin: 20px 0;
+              }
+              .qr-text {
+                font-family: monospace;
+                font-size: 14px;
+                color: #666;
+                margin-top: 20px;
+              }
+              .description {
+                font-size: 16px;
+                color: #666;
+                margin: 20px 0;
+              }
+              .tags {
+                font-size: 14px;
+                color: #888;
+                margin: 20px 0;
+              }
+              .location {
+                font-size: 14px;
+                color: #888;
+                margin: 10px 0;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="title">BinQR</div>
+              <div class="box-name">${editedBox.name}</div>
+              
+              <div class="qr-container">
+                <div class="qr-code">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(editedBox.qr_code)}" alt="QR Code" />
+                </div>
+                <div class="qr-text">${editedBox.qr_code}</div>
+              </div>
+              
+              ${editedBox.description ? `<div class="description">${editedBox.description}</div>` : ''}
+              ${editedBox.tags.length > 0 ? `<div class="tags">Contents: ${editedBox.tags.join(', ')}</div>` : ''}
+              ${editedBox.location_id ? `<div class="location">Location: ${getLocationName(editedBox.location_id)}</div>` : ''}
+            </div>
+          </body>
+        </html>
+      `;
+
+      const { uri } = await Print.printToFileAsync({
+        html: htmlContent,
+        base64: false,
+      });
+
+      await Sharing.shareAsync(uri, {
+        mimeType: 'application/pdf',
+        dialogTitle: `Print QR Code - ${editedBox.name}`,
+      });
+    } catch (error) {
+      console.error('Error printing QR code:', error);
+      Alert.alert("Error", "Failed to generate printable QR code");
+    }
+  };
+
   const getLocationName = (locationId: string): string => {
     const location = locations.find((loc) => loc.id === locationId);
     return location?.name || "Unknown Location";
@@ -224,39 +324,7 @@ export default function BoxDetailsScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Edit Button Header */}
-      <View style={styles.editHeader}>
-        {isEditing && (
-          <TouchableOpacity
-            style={[styles.editButton, styles.cancelButton]}
-            onPress={() => {
-              setEditedBox(box); // Reset to original data
-              setIsEditing(false);
-            }}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        )}
-        
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={isEditing ? handleSaveChanges : () => setIsEditing(true)}
-          disabled={isEditing && isLoading}
-        >
-          {isEditing && isLoading ? (
-            <ActivityIndicator size="small" color="#2563eb" />
-          ) : (
-            <Ionicons
-              name={isEditing ? "checkmark" : "pencil"}
-              size={24}
-              color="#2563eb"
-            />
-          )}
-          <Text style={styles.editButtonText}>
-            {isEditing ? "Save" : "Edit"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+
 
       <ScrollView style={styles.content}>
         {/* Box Image */}
@@ -403,35 +471,68 @@ export default function BoxDetailsScreen() {
           </View>
         </View>
 
-        {/* Action Buttons */}
-        {isEditing && (
-          <View style={styles.actionButtons}>
+
+      </ScrollView>
+
+      {/* Bottom Action Bar */}
+      <View style={styles.bottomActionBar}>
+        {isEditing ? (
+          // Edit mode: Save Changes and Cancel
+          <>
             <TouchableOpacity
-              style={[styles.actionButton, styles.saveButton]}
+              style={[styles.bottomButton, styles.cancelButton]}
+              onPress={() => {
+                setEditedBox(box); // Reset to original data
+                setIsEditing(false);
+              }}
+              disabled={isLoading}
+            >
+              <Ionicons name="close" size={20} color="#666" />
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.bottomButton, styles.saveButton]}
               onPress={handleSaveChanges}
               disabled={isLoading}
             >
               {isLoading ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
-                <>
-                  <Ionicons name="checkmark" size={20} color="white" />
-                  <Text style={styles.saveButtonText}>Save Changes</Text>
-                </>
+                <Ionicons name="checkmark" size={20} color="white" />
               )}
+              <Text style={styles.saveButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          // View mode: Edit, Delete, Print QR
+          <>
+            <TouchableOpacity
+              style={[styles.bottomButton, styles.editButton]}
+              onPress={() => setIsEditing(true)}
+            >
+              <Ionicons name="pencil" size={20} color="#2563eb" />
+              <Text style={styles.editButtonText}>Edit</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.actionButton, styles.deleteButton]}
+              style={[styles.bottomButton, styles.deleteButton]}
               onPress={handleDeleteBox}
-              disabled={isLoading}
             >
-              <Ionicons name="trash" size={20} color="white" />
+              <Ionicons name="trash" size={20} color="#dc2626" />
               <Text style={styles.deleteButtonText}>Delete Box</Text>
             </TouchableOpacity>
-          </View>
+
+            <TouchableOpacity
+              style={[styles.bottomButton, styles.printButton]}
+              onPress={handlePrintQR}
+            >
+              <Ionicons name="print" size={20} color="#16a34a" />
+              <Text style={styles.printButtonText}>Print QR</Text>
+            </TouchableOpacity>
+          </>
         )}
-      </ScrollView>
+      </View>
 
       {/* Location Picker Modal */}
       {showLocationPicker && (
@@ -484,6 +585,67 @@ export default function BoxDetailsScreen() {
           </View>
         </View>
       )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.deleteModal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Delete Box</Text>
+              <TouchableOpacity onPress={() => {
+                setShowDeleteConfirm(false);
+                setDeleteConfirmText("");
+              }}>
+                <Ionicons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.deleteModalContent}>
+              <Text style={styles.deleteWarning}>
+                This action cannot be undone. To confirm deletion, please type the box name:
+              </Text>
+              <Text style={styles.boxNameToDelete}>"{editedBox.name}"</Text>
+              
+              <TextInput
+                style={styles.deleteConfirmInput}
+                value={deleteConfirmText}
+                onChangeText={setDeleteConfirmText}
+                placeholder="Type box name here"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+
+              <View style={styles.deleteModalButtons}>
+                <TouchableOpacity
+                  style={[styles.deleteModalButton, styles.cancelDeleteButton]}
+                  onPress={() => {
+                    setShowDeleteConfirm(false);
+                    setDeleteConfirmText("");
+                  }}
+                >
+                  <Text style={styles.cancelDeleteText}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.deleteModalButton, 
+                    styles.confirmDeleteButton,
+                    deleteConfirmText !== editedBox.name && styles.confirmDeleteButtonDisabled
+                  ]}
+                  onPress={confirmDeleteBox}
+                  disabled={deleteConfirmText !== editedBox.name || isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text style={styles.confirmDeleteText}>Delete Box</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -493,31 +655,73 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f9f9f9",
   },
-  editHeader: {
+  bottomActionBar: {
     flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 16,
     backgroundColor: "white",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingBottom: 34, // Account for safe area
+    borderTopWidth: 1,
+    borderTopColor: "#e5e7eb",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
     gap: 12,
   },
-  editButton: {
+  bottomButton: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
-    backgroundColor: "#f0f9ff",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderRadius: 8,
-    gap: 4,
+    gap: 6,
+  },
+  editButton: {
+    backgroundColor: "#f0f9ff",
+    borderWidth: 1,
+    borderColor: "#2563eb",
   },
   editButtonText: {
     color: "#2563eb",
     fontSize: 14,
     fontWeight: "600",
   },
+  deleteButton: {
+    backgroundColor: "#fef2f2",
+    borderWidth: 1,
+    borderColor: "#dc2626",
+  },
+  deleteButtonText: {
+    color: "#dc2626",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  printButton: {
+    backgroundColor: "#f0fdf4",
+    borderWidth: 1,
+    borderColor: "#16a34a",
+  },
+  printButtonText: {
+    color: "#16a34a",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  saveButton: {
+    backgroundColor: "#16a34a",
+  },
+  saveButtonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
+  },
   cancelButton: {
     backgroundColor: "#f3f4f6",
+    borderWidth: 1,
+    borderColor: "#d1d5db",
   },
   cancelButtonText: {
     color: "#666",
@@ -679,30 +883,64 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
   },
-  actionButtons: {
+  // Delete Modal Styles
+  deleteModal: {
+    backgroundColor: "white",
+    margin: 20,
+    borderRadius: 12,
+    maxWidth: "90%",
+    alignSelf: "center",
+  },
+  deleteModalContent: {
     padding: 20,
+  },
+  deleteWarning: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  boxNameToDelete: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#dc2626",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  deleteConfirmInput: {
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 20,
+    backgroundColor: "white",
+  },
+  deleteModalButtons: {
+    flexDirection: "row",
     gap: 12,
   },
-  actionButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 16,
+  deleteModalButton: {
+    flex: 1,
+    paddingVertical: 12,
     borderRadius: 8,
-    gap: 8,
+    alignItems: "center",
   },
-  saveButton: {
-    backgroundColor: "#16a34a",
+  cancelDeleteButton: {
+    backgroundColor: "#f3f4f6",
   },
-  saveButtonText: {
-    color: "white",
+  cancelDeleteText: {
+    color: "#666",
     fontSize: 16,
     fontWeight: "600",
   },
-  deleteButton: {
+  confirmDeleteButton: {
     backgroundColor: "#dc2626",
   },
-  deleteButtonText: {
+  confirmDeleteButtonDisabled: {
+    backgroundColor: "#d1d5db",
+  },
+  confirmDeleteText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",
