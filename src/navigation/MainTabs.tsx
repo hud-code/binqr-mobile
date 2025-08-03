@@ -5,11 +5,11 @@ import { Ionicons } from "@expo/vector-icons";
 // Stack Navigators
 import HomeStack from "./HomeStack";
 import BrowseStack from "./BrowseStack";
+import SettingsStack from "./SettingsStack";
 
 // Direct Screens
 import CreateScreen from "../screens/CreateScreen";
 import ScanScreen from "../screens/ScanScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -75,7 +75,7 @@ export default function MainTabs() {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsStack}
         options={{ title: "Settings" }}
       />
     </Tab.Navigator>

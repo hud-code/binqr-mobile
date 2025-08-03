@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { Alert } from "react-native";
 import { supabase } from "../lib/supabase";
 import type { AuthUser, Profile } from "../lib/types";
 
@@ -16,6 +17,12 @@ interface AuthContextType {
     password: string;
     full_name?: string;
     invite_code: string;
+  }) => Promise<{ data?: any; error?: Error }>;
+  signInWithApple: () => Promise<{ data?: any; error?: Error }>;
+  signInWithGoogle: () => Promise<{ data?: any; error?: Error }>;
+  updateProfile: (data: {
+    full_name?: string;
+    email?: string;
   }) => Promise<{ data?: any; error?: Error }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -82,6 +89,61 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setProfile(null);
     } catch (error) {
       console.error("Error signing out:", error);
+    }
+  };
+
+  const signInWithApple = async () => {
+    try {
+      // This would be implemented with expo-apple-authentication
+      // For now, return placeholder
+      Alert.alert("Coming Soon", "Apple Sign In will be available in the next update");
+      return { error: new Error("Apple Sign In not implemented yet") };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      // This would be implemented with @react-native-google-signin/google-signin
+      // For now, return placeholder
+      Alert.alert("Coming Soon", "Google Sign In will be available in the next update");
+      return { error: new Error("Google Sign In not implemented yet") };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const updateProfile = async (data: { full_name?: string; email?: string }) => {
+    if (!user) return { error: new Error("User not authenticated") };
+
+    try {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          full_name: data.full_name,
+          email: data.email,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_id", user.id);
+
+      if (profileError) throw profileError;
+
+      // Update email in auth if provided and different
+      if (data.email && data.email !== user.email) {
+        const { error: emailError } = await supabase.auth.updateUser({
+          email: data.email,
+        });
+
+        if (emailError) throw emailError;
+      }
+
+      // Refresh profile data
+      await refreshProfile();
+
+      return { data: "Profile updated successfully" };
+    } catch (error) {
+      return { error: error as Error };
     }
   };
 
@@ -169,6 +231,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated,
     signIn,
     signUp,
+    signInWithApple,
+    signInWithGoogle,
+    updateProfile,
     signOut,
     refreshProfile,
   };

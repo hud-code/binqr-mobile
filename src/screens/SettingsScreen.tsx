@@ -9,15 +9,44 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SettingsScreen() {
   const { profile, signOut } = useAuth();
+  const navigation = useNavigation();
 
   const handleSignOut = () => {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
       { text: "Cancel", style: "cancel" },
       { text: "Sign Out", style: "destructive", onPress: signOut },
     ]);
+  };
+
+  const handleEditProfile = () => {
+    navigation.navigate("EditProfile" as never);
+  };
+
+  const handleNotifications = () => {
+    Alert.alert("Coming Soon", "Notification settings will be available in a future update.");
+  };
+
+  const handlePrivacySecurity = () => {
+    Alert.alert("Coming Soon", "Privacy & Security settings will be available in a future update.");
+  };
+
+  const handleBackupSync = () => {
+    Alert.alert("Coming Soon", "Backup & Sync features will be available in a future update.");
+  };
+
+  const handleHelpSupport = () => {
+    Alert.alert("Help & Support", "For support, please email: support@binqr.app");
+  };
+
+  const handleAbout = () => {
+    Alert.alert(
+      "About BinQR",
+      "BinQR helps you organize and track your storage boxes using QR codes.\n\nVersion 1.0.0\n\nMade with ❤️ for better organization."
+    );
   };
 
   return (
@@ -44,25 +73,25 @@ export default function SettingsScreen() {
 
         {/* Settings Options */}
         <View style={styles.section}>
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleEditProfile}>
             <Ionicons name="person-outline" size={24} color="#2563eb" />
             <Text style={styles.settingText}>Edit Profile</Text>
             <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleNotifications}>
             <Ionicons name="notifications-outline" size={24} color="#2563eb" />
             <Text style={styles.settingText}>Notifications</Text>
             <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handlePrivacySecurity}>
             <Ionicons name="lock-closed-outline" size={24} color="#2563eb" />
             <Text style={styles.settingText}>Privacy & Security</Text>
             <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleBackupSync}>
             <Ionicons name="cloud-outline" size={24} color="#2563eb" />
             <Text style={styles.settingText}>Backup & Sync</Text>
             <Ionicons name="chevron-forward" size={20} color="#999" />
@@ -71,13 +100,13 @@ export default function SettingsScreen() {
 
         {/* App Info */}
         <View style={styles.section}>
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleHelpSupport}>
             <Ionicons name="help-circle-outline" size={24} color="#2563eb" />
             <Text style={styles.settingText}>Help & Support</Text>
             <Ionicons name="chevron-forward" size={20} color="#999" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.settingItem}>
+          <TouchableOpacity style={styles.settingItem} onPress={handleAbout}>
             <Ionicons
               name="information-circle-outline"
               size={24}
