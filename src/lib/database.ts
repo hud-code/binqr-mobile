@@ -360,6 +360,7 @@ export const updateBox = async (boxId: string, updates: {
   location_id?: string;
 }): Promise<Box | null> => {
   try {
+    console.log('updateBox called with:', { boxId, updates });
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
@@ -409,7 +410,7 @@ export const updateBox = async (boxId: string, updates: {
     }
 
     // Return updated box
-    return {
+    const result = {
       id: boxData.id,
       user_id: boxData.user_id,
       name: boxData.name,
@@ -422,6 +423,8 @@ export const updateBox = async (boxId: string, updates: {
       created_at: boxData.created_at,
       updated_at: boxData.updated_at,
     };
+    console.log('updateBox returning:', result);
+    return result;
   } catch (error) {
     console.error('Error updating box:', error);
     return null;

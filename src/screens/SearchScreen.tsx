@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { searchBoxes, getStoredLocations } from "../lib/database";
 import type { Box, Location } from "../lib/types";
@@ -29,6 +29,17 @@ export default function SearchScreen() {
   useEffect(() => {
     loadLocations();
   }, []);
+
+  // Reload data when screen comes into focus (e.g., returning from BoxDetailsScreen)
+  useFocusEffect(
+    useCallback(() => {
+      loadLocations();
+      // Re-run search if user had previously searched
+      if (hasSearched && (searchQuery.trim() || selectedLocation !== "all")) {
+        performSearch();
+      }
+    }, [hasSearched, searchQuery, selectedLocation])
+  );
 
   const loadLocations = async () => {
     try {

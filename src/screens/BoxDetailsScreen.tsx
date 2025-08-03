@@ -110,6 +110,14 @@ export default function BoxDetailsScreen() {
 
     setIsLoading(true);
     try {
+      console.log('Updating box with data:', {
+        name: editedBox.name.trim(),
+        description: editedBox.description?.trim(),
+        photo_urls: editedBox.photo_urls,
+        tags: editedBox.tags,
+        location_id: editedBox.location_id,
+      });
+
       const updatedBox = await updateBox(editedBox.id, {
         name: editedBox.name.trim(),
         description: editedBox.description?.trim(),
@@ -119,10 +127,12 @@ export default function BoxDetailsScreen() {
       });
 
       if (updatedBox) {
+        console.log('Box updated successfully:', updatedBox);
         setEditedBox(updatedBox);
         setIsEditing(false);
         Alert.alert("Success", "Box updated successfully!");
       } else {
+        console.error('Update returned null');
         Alert.alert("Error", "Failed to update box");
       }
     } catch (error) {
