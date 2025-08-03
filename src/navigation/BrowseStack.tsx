@@ -1,22 +1,22 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SearchScreen from "../screens/SearchScreen";
+import BrowseScreen from "../screens/BrowseScreen";
 import BoxDetailsScreen from "../screens/BoxDetailsScreen";
 import type { Box } from "../lib/types";
 
-export type SearchStackParamList = {
-  SearchMain: undefined;
+export type BrowseStackParamList = {
+  BrowseMain: undefined;
   BoxDetails: { box: Box };
 };
 
-const Stack = createStackNavigator<SearchStackParamList>();
+const Stack = createStackNavigator<BrowseStackParamList>();
 
-export default function SearchStack() {
+export default function BrowseStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen 
-        name="SearchMain" 
-        component={SearchScreen} 
+        name="BrowseMain" 
+        component={BrowseScreen} 
         options={{ 
           headerShown: false // Hide header since tab navigator already shows it
         }} 

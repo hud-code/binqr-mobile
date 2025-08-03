@@ -4,12 +4,11 @@ import { Ionicons } from "@expo/vector-icons";
 
 // Stack Navigators
 import HomeStack from "./HomeStack";
-import SearchStack from "./SearchStack";
+import BrowseStack from "./BrowseStack";
 
 // Direct Screens
 import CreateScreen from "../screens/CreateScreen";
 import ScanScreen from "../screens/ScanScreen";
-import LocationsScreen from "../screens/LocationsScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
@@ -31,11 +30,8 @@ export default function MainTabs() {
             case "Scan":
               iconName = focused ? "scan" : "scan-outline";
               break;
-            case "Search":
-              iconName = focused ? "search" : "search-outline";
-              break;
-            case "Locations":
-              iconName = focused ? "location" : "location-outline";
+            case "Browse":
+              iconName = focused ? "library" : "library-outline";
               break;
             case "Settings":
               iconName = focused ? "settings" : "settings-outline";
@@ -73,14 +69,9 @@ export default function MainTabs() {
         options={{ title: "Scan QR" }}
       />
       <Tab.Screen
-        name="Search"
-        component={SearchStack}
-        options={{ title: "Search" }}
-      />
-      <Tab.Screen
-        name="Locations"
-        component={LocationsScreen}
-        options={{ title: "Locations" }}
+        name="Browse"
+        component={BrowseStack}
+        options={{ title: "Browse" }}
       />
       <Tab.Screen
         name="Settings"

@@ -24,13 +24,14 @@ import {
   updateBox,
   deleteBox,
   generateNewQRCode,
+  saveLocation,
 } from "../lib/database";
 import type { Box, Location } from "../lib/types";
 import type { HomeStackParamList } from "../navigation/HomeStack";
-import type { SearchStackParamList } from "../navigation/SearchStack";
+import type { BrowseStackParamList } from "../navigation/BrowseStack";
 
-type BoxDetailsNavigation = StackNavigationProp<HomeStackParamList | SearchStackParamList, 'BoxDetails'>;
-type BoxDetailsRoute = RouteProp<HomeStackParamList | SearchStackParamList, 'BoxDetails'>;
+type BoxDetailsNavigation = StackNavigationProp<HomeStackParamList | BrowseStackParamList, 'BoxDetails'>;
+type BoxDetailsRoute = RouteProp<HomeStackParamList | BrowseStackParamList, 'BoxDetails'>;
 
 export default function BoxDetailsScreen() {
   const navigation = useNavigation<BoxDetailsNavigation>();
@@ -43,6 +44,8 @@ export default function BoxDetailsScreen() {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [showNewLocationForm, setShowNewLocationForm] = useState(false);
+  const [newLocationName, setNewLocationName] = useState("");
 
   useEffect(() => {
     loadLocations();
@@ -313,6 +316,32 @@ export default function BoxDetailsScreen() {
     }
   };
 
+  const handleCreateLocation = async () => {
+    if (!newLocationName.trim()) {
+      Alert.alert("Error", "Please enter a location name");
+      return;
+    }
+
+    try {
+      const newLocation = await saveLocation({
+        name: newLocationName.trim(),
+        description: "",
+      });
+
+      if (newLocation) {
+        setLocations([newLocation, ...locations]);
+        setEditedBox({ ...editedBox, location_id: newLocation.id });
+        setNewLocationName("");
+        setShowNewLocationForm(false);
+        Alert.alert("Success", "Location created successfully!");
+      } else {
+        Alert.alert("Error", "Failed to create location");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to create location");
+    }
+  };
+
   const getLocationName = (locationId: string): string => {
     const location = locations.find((loc) => loc.id === locationId);
     return location?.name || "Unknown Location";
@@ -546,6 +575,46 @@ export default function BoxDetailsScreen() {
             </View>
 
             <ScrollView style={styles.locationList}>
+              {/* Add New Location Button */}
+              <TouchableOpacity
+                style={styles.addLocationButton}
+                onPress={() => setShowNewLocationForm(true)}
+              >
+                <Ionicons name="add-circle" size={20} color="#2563eb" />
+                <Text style={styles.addLocationText}>Add New Location</Text>
+              </TouchableOpacity>
+
+              {/* New Location Form */}
+              {showNewLocationForm && (
+                <View style={styles.newLocationForm}>
+                  <TextInput
+                    style={styles.newLocationInput}
+                    placeholder="Enter location name"
+                    value={newLocationName}
+                    onChangeText={setNewLocationName}
+                    autoFocus
+                  />
+                  <View style={styles.newLocationActions}>
+                    <TouchableOpacity
+                      style={styles.cancelLocationButton}
+                      onPress={() => {
+                        setShowNewLocationForm(false);
+                        setNewLocationName("");
+                      }}
+                    >
+                      <Text style={styles.cancelLocationText}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.createLocationButton}
+                      onPress={handleCreateLocation}
+                    >
+                      <Text style={styles.createLocationText}>Create</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+
+              {/* Existing Locations */}
               {locations.map((location) => (
                 <TouchableOpacity
                   key={location.id}
@@ -977,6 +1046,63 @@ const styles = StyleSheet.create({
   },
   locationList: {
     maxHeight: 300,
+  },
+  addLocationButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+    backgroundColor: "#f9f9f9",
+    gap: 12,
+  },
+  addLocationText: {
+    fontSize: 16,
+    color: "#2563eb",
+    fontWeight: "600",
+  },
+  newLocationForm: {
+    padding: 16,
+    backgroundColor: "#f0f9ff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+  },
+  newLocationInput: {
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: "white",
+    marginBottom: 12,
+  },
+  newLocationActions: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  cancelLocationButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: "#f3f4f6",
+    alignItems: "center",
+  },
+  cancelLocationText: {
+    fontSize: 16,
+    color: "#666",
+    fontWeight: "600",
+  },
+  createLocationButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: "#2563eb",
+    alignItems: "center",
+  },
+  createLocationText: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "600",
   },
   locationOption: {
     flexDirection: "row",
