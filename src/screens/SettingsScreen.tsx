@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
@@ -56,11 +57,18 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <View style={styles.profileHeader}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>
-                {profile?.full_name?.charAt(0)?.toUpperCase() ||
-                  profile?.email?.charAt(0)?.toUpperCase() ||
-                  "U"}
-              </Text>
+              {profile?.avatar_url ? (
+                <Image 
+                  source={{ uri: profile.avatar_url }} 
+                  style={styles.avatarImage} 
+                />
+              ) : (
+                <Text style={styles.avatarText}>
+                  {profile?.full_name?.charAt(0)?.toUpperCase() ||
+                    profile?.email?.charAt(0)?.toUpperCase() ||
+                    "U"}
+                </Text>
+              )}
             </View>
             <View style={styles.profileInfo}>
               <Text style={styles.profileName}>
@@ -172,6 +180,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 24,
     fontWeight: "bold",
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 30,
   },
   profileInfo: {
     flex: 1,

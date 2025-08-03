@@ -10,33 +10,74 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 
 export default function EditProfileScreen({ navigation }: any) {
   const { profile, refreshProfile } = useAuth();
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (profile) {
       setFullName(profile.full_name || "");
-      setEmail(profile.email || "");
+      setProfileImage(profile.avatar_url || null);
     }
   }, [profile]);
+
+  const handleUpdateImage = async () => {
+    Alert.alert(
+      "Update Profile Picture",
+      "Choose how you want to update your profile picture",
+      [
+        { text: "Take Photo", onPress: takePhoto },
+        { text: "Choose from Library", onPress: pickImage },
+        { text: "Cancel", style: "cancel" },
+      ]
+    );
+  };
+
+  const takePhoto = async () => {
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setProfileImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to take photo");
+    }
+  };
+
+  const pickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setProfileImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to pick image");
+    }
+  };
 
   const handleSave = async () => {
     if (!fullName.trim()) {
       Alert.alert("Error", "Please enter your name");
-      return;
-    }
-
-    if (!email.trim() || !email.includes("@")) {
-      Alert.alert("Error", "Please enter a valid email address");
       return;
     }
 
@@ -48,29 +89,12 @@ export default function EditProfileScreen({ navigation }: any) {
         .from("profiles")
         .update({
           full_name: fullName.trim(),
-          email: email.trim(),
+          avatar_url: profileImage,
           updated_at: new Date().toISOString(),
         })
         .eq("user_id", profile?.user_id);
 
       if (profileError) throw profileError;
-
-      // Update email in auth if it changed
-      if (email !== profile?.email) {
-        const { error: emailError } = await supabase.auth.updateUser({
-          email: email.trim(),
-        });
-
-        if (emailError) {
-          // If email update fails, still show success for profile update
-          Alert.alert(
-            "Profile Updated",
-            "Your name was updated successfully. Email change requires verification - please check your inbox.",
-            [{ text: "OK", onPress: () => navigation.goBack() }]
-          );
-          return;
-        }
-      }
 
       // Refresh profile data
       await refreshProfile();
@@ -124,6 +148,30 @@ export default function EditProfileScreen({ navigation }: any) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Profile Information</Text>
 
+          {/* Profile Picture */}
+          <View style={styles.profileImageSection}>
+            <View style={styles.profileImageContainer}>
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+              ) : (
+                <View style={styles.placeholderImage}>
+                  <Ionicons 
+                    name="person" 
+                    size={40} 
+                    color="#999" 
+                  />
+                </View>
+              )}
+            </View>
+            <TouchableOpacity
+              style={styles.updateImageButton}
+              onPress={handleUpdateImage}
+            >
+              <Ionicons name="camera" size={16} color="#2563eb" />
+              <Text style={styles.updateImageText}>Update Photo</Text>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Full Name</Text>
             <TextInput
@@ -132,23 +180,18 @@ export default function EditProfileScreen({ navigation }: any) {
               onChangeText={setFullName}
               placeholder="Enter your full name"
               autoCapitalize="words"
-              returnKeyType="next"
+              returnKeyType="done"
             />
           </View>
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email Address</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              returnKeyType="done"
-            />
+            <View style={styles.readOnlyField}>
+              <Text style={styles.readOnlyText}>{profile?.email}</Text>
+              <Ionicons name="lock-closed" size={16} color="#999" />
+            </View>
             <Text style={styles.helperText}>
-              Changing your email will require verification
+              Email cannot be changed as it's your login credential
             </Text>
           </View>
         </View>
@@ -242,6 +285,59 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     marginTop: 4,
+  },
+  profileImageSection: {
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  profileImageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    overflow: "hidden",
+    marginBottom: 12,
+  },
+  profileImage: {
+    width: "100%",
+    height: "100%",
+  },
+  placeholderImage: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#f3f4f6",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#e5e7eb",
+    borderStyle: "dashed",
+  },
+  updateImageButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: "#f0f9ff",
+    borderRadius: 6,
+    gap: 6,
+  },
+  updateImageText: {
+    fontSize: 14,
+    color: "#2563eb",
+    fontWeight: "500",
+  },
+  readOnlyField: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: "#f9f9f9",
+  },
+  readOnlyText: {
+    fontSize: 16,
+    color: "#666",
   },
   settingItem: {
     flexDirection: "row",

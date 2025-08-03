@@ -22,7 +22,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<{ data?: any; error?: Error }>;
   updateProfile: (data: {
     full_name?: string;
-    email?: string;
+    avatar_url?: string;
   }) => Promise<{ data?: any; error?: Error }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const updateProfile = async (data: { full_name?: string; email?: string }) => {
+  const updateProfile = async (data: { full_name?: string; avatar_url?: string }) => {
     if (!user) return { error: new Error("User not authenticated") };
 
     try {
@@ -122,21 +122,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .from("profiles")
         .update({
           full_name: data.full_name,
-          email: data.email,
+          avatar_url: data.avatar_url,
           updated_at: new Date().toISOString(),
         })
         .eq("user_id", user.id);
 
       if (profileError) throw profileError;
-
-      // Update email in auth if provided and different
-      if (data.email && data.email !== user.email) {
-        const { error: emailError } = await supabase.auth.updateUser({
-          email: data.email,
-        });
-
-        if (emailError) throw emailError;
-      }
 
       // Refresh profile data
       await refreshProfile();
