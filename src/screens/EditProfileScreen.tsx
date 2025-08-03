@@ -85,11 +85,16 @@ export default function EditProfileScreen({ navigation }: any) {
 
     try {
       // Update profile in database
-      console.log('Updating profile directly for user:', profile?.id, 'with data:', {
-        full_name: fullName.trim(),
-        avatar_url: profileImage,
-      });
-      
+      console.log(
+        "Updating profile directly for user:",
+        profile?.id,
+        "with data:",
+        {
+          full_name: fullName.trim(),
+          avatar_url: profileImage,
+        }
+      );
+
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -105,7 +110,7 @@ export default function EditProfileScreen({ navigation }: any) {
       await refreshProfile();
 
       Alert.alert("Success", "Profile updated successfully!", [
-        { text: "OK", onPress: () => navigation.goBack() }
+        { text: "OK", onPress: () => navigation.goBack() },
       ]);
     } catch (error: any) {
       console.error("Error updating profile:", error);
@@ -157,14 +162,13 @@ export default function EditProfileScreen({ navigation }: any) {
           <View style={styles.profileImageSection}>
             <View style={styles.profileImageContainer}>
               {profileImage ? (
-                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                <Image
+                  source={{ uri: profileImage }}
+                  style={styles.profileImage}
+                />
               ) : (
                 <View style={styles.placeholderImage}>
-                  <Ionicons 
-                    name="person" 
-                    size={40} 
-                    color="#999" 
-                  />
+                  <Ionicons name="person" size={40} color="#999" />
                 </View>
               )}
             </View>

@@ -6,17 +6,28 @@ import { StatusBar } from "expo-status-bar";
 
 // Auth
 import { AuthProvider } from "./src/context/AuthContext";
+import { ThemeProvider, useTheme } from "./src/context/ThemeContext";
 import AuthStack from "./src/navigation/AuthStack";
+
+function AppContent() {
+  const { isDark } = useTheme();
+  
+  return (
+    <NavigationContainer>
+      <StatusBar style={isDark ? "light" : "dark"} />
+      <AuthStack />
+    </NavigationContainer>
+  );
+}
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <NavigationContainer>
-          <StatusBar style="auto" />
-          <AuthStack />
-        </NavigationContainer>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

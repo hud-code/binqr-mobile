@@ -96,7 +96,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       // This would be implemented with expo-apple-authentication
       // For now, return placeholder
-      Alert.alert("Coming Soon", "Apple Sign In will be available in the next update");
+      Alert.alert(
+        "Coming Soon",
+        "Apple Sign In will be available in the next update"
+      );
       return { error: new Error("Apple Sign In not implemented yet") };
     } catch (error) {
       return { error: error as Error };
@@ -107,19 +110,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       // This would be implemented with @react-native-google-signin/google-signin
       // For now, return placeholder
-      Alert.alert("Coming Soon", "Google Sign In will be available in the next update");
+      Alert.alert(
+        "Coming Soon",
+        "Google Sign In will be available in the next update"
+      );
       return { error: new Error("Google Sign In not implemented yet") };
     } catch (error) {
       return { error: error as Error };
     }
   };
 
-  const updateProfile = async (data: { full_name?: string; avatar_url?: string }) => {
+  const updateProfile = async (data: {
+    full_name?: string;
+    avatar_url?: string;
+  }) => {
     if (!user) return { error: new Error("User not authenticated") };
 
     try {
-      console.log('Updating profile for user:', user.id, 'with data:', data);
-      
+      console.log("Updating profile for user:", user.id, "with data:", data);
+
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -130,7 +139,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .eq("id", user.id);
 
       if (profileError) {
-        console.error('Profile update error:', profileError);
+        console.error("Profile update error:", profileError);
         throw profileError;
       }
 
@@ -139,7 +148,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       return { data: "Profile updated successfully" };
     } catch (error) {
-      console.error('Update profile failed:', error);
+      console.error("Update profile failed:", error);
       return { error: error as Error };
     }
   };
@@ -148,8 +157,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (!user) return;
 
     try {
-      console.log('Fetching profile for user:', user.id);
-      
+      console.log("Fetching profile for user:", user.id);
+
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
@@ -157,11 +166,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .single();
 
       if (error) {
-        console.error('Profile fetch error:', error);
+        console.error("Profile fetch error:", error);
         throw error;
       }
-      
-      console.log('Profile data fetched:', data);
+
+      console.log("Profile data fetched:", data);
       setProfile(data);
     } catch (error) {
       console.error("Error refreshing profile:", error);
@@ -180,17 +189,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser(session.user as AuthUser);
 
           // Get profile
-          console.log('Fetching initial profile for user:', session.user.id);
+          console.log("Fetching initial profile for user:", session.user.id);
           const { data: profileData, error: profileError } = await supabase
             .from("profiles")
             .select("*")
             .eq("id", session.user.id)
             .single();
-            
+
           if (profileError) {
-            console.error('Initial profile fetch error:', profileError);
+            console.error("Initial profile fetch error:", profileError);
           } else {
-            console.log('Initial profile data:', profileData);
+            console.log("Initial profile data:", profileData);
           }
 
           if (profileData) {
@@ -214,17 +223,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(session.user as AuthUser);
 
         // Get profile for new user
-        console.log('Fetching profile for auth change, user:', session.user.id);
+        console.log("Fetching profile for auth change, user:", session.user.id);
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", session.user.id)
           .single();
-          
+
         if (profileError) {
-          console.error('Auth change profile fetch error:', profileError);
+          console.error("Auth change profile fetch error:", profileError);
         } else {
-          console.log('Auth change profile data:', profileData);
+          console.log("Auth change profile data:", profileData);
         }
 
         if (profileData) {

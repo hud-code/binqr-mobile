@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SettingsScreen() {
   const { profile, signOut } = useAuth();
+  const { theme, themeMode } = useTheme();
   const navigation = useNavigation();
 
   const handleSignOut = () => {
@@ -50,6 +52,114 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleAppearance = () => {
+    navigation.navigate("ThemeSettings" as never);
+  };
+
+  const getThemeModeLabel = () => {
+    switch (themeMode) {
+      case "light":
+        return "Light";
+      case "dark":
+        return "Dark";
+      case "system":
+        return "System";
+      default:
+        return "System";
+    }
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    content: {
+      padding: 20,
+    },
+    section: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 12,
+      marginBottom: 20,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    profileHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 20,
+    },
+    avatar: {
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: theme.colors.primary,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 16,
+    },
+    avatarText: {
+      color: "white",
+      fontSize: 24,
+      fontWeight: "bold",
+    },
+    avatarImage: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 30,
+    },
+    profileInfo: {
+      flex: 1,
+    },
+    profileName: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginBottom: 4,
+    },
+    profileEmail: {
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+    },
+    settingItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    settingText: {
+      fontSize: 16,
+      color: theme.colors.text,
+      marginLeft: 12,
+      flex: 1,
+    },
+    settingWithValue: {
+      flex: 1,
+      marginLeft: 12,
+    },
+    settingValue: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      marginTop: 2,
+    },
+    signOutItem: {
+      borderBottomWidth: 0,
+    },
+    signOutText: {
+      color: theme.colors.error,
+    },
+    version: {
+      textAlign: "center",
+      color: theme.colors.textSecondary,
+      fontSize: 14,
+      marginTop: 20,
+    },
+  });
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
@@ -82,46 +192,57 @@ export default function SettingsScreen() {
         {/* Settings Options */}
         <View style={styles.section}>
           <TouchableOpacity style={styles.settingItem} onPress={handleEditProfile}>
-            <Ionicons name="person-outline" size={24} color="#2563eb" />
+            <Ionicons name="person-outline" size={24} color={theme.colors.primary} />
             <Text style={styles.settingText}>Edit Profile</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem} onPress={handleNotifications}>
-            <Ionicons name="notifications-outline" size={24} color="#2563eb" />
+            <Ionicons name="notifications-outline" size={24} color={theme.colors.primary} />
             <Text style={styles.settingText}>Notifications</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem} onPress={handlePrivacySecurity}>
-            <Ionicons name="lock-closed-outline" size={24} color="#2563eb" />
+            <Ionicons name="lock-closed-outline" size={24} color={theme.colors.primary} />
             <Text style={styles.settingText}>Privacy & Security</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.settingItem} onPress={handleAppearance}>
+            <Ionicons name="color-palette-outline" size={24} color={theme.colors.primary} />
+            <View style={styles.settingWithValue}>
+              <Text style={[styles.settingText, { color: theme.colors.text }]}>Appearance</Text>
+              <Text style={[styles.settingValue, { color: theme.colors.textSecondary }]}>
+                {getThemeModeLabel()}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem} onPress={handleBackupSync}>
-            <Ionicons name="cloud-outline" size={24} color="#2563eb" />
-            <Text style={styles.settingText}>Backup & Sync</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="cloud-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.settingText, { color: theme.colors.text }]}>Backup & Sync</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
 
         {/* App Info */}
         <View style={styles.section}>
           <TouchableOpacity style={styles.settingItem} onPress={handleHelpSupport}>
-            <Ionicons name="help-circle-outline" size={24} color="#2563eb" />
+            <Ionicons name="help-circle-outline" size={24} color={theme.colors.primary} />
             <Text style={styles.settingText}>Help & Support</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem} onPress={handleAbout}>
             <Ionicons
               name="information-circle-outline"
               size={24}
-              color="#2563eb"
+              color={theme.colors.primary}
             />
             <Text style={styles.settingText}>About</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
 
@@ -131,7 +252,7 @@ export default function SettingsScreen() {
             style={[styles.settingItem, styles.signOutItem]}
             onPress={handleSignOut}
           >
-            <Ionicons name="log-out-outline" size={24} color="#dc2626" />
+            <Ionicons name="log-out-outline" size={24} color={theme.colors.error} />
             <Text style={[styles.settingText, styles.signOutText]}>
               Sign Out
             </Text>
@@ -144,84 +265,4 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f9f9f9",
-  },
-  content: {
-    padding: 20,
-  },
-  section: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  profileHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#2563eb",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  avatarText: {
-    color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 30,
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  profileName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4,
-  },
-  profileEmail: {
-    fontSize: 16,
-    color: "#666",
-  },
-  settingItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-  },
-  settingText: {
-    fontSize: 16,
-    color: "#333",
-    marginLeft: 12,
-    flex: 1,
-  },
-  signOutItem: {
-    borderBottomWidth: 0,
-  },
-  signOutText: {
-    color: "#dc2626",
-  },
-  version: {
-    textAlign: "center",
-    color: "#999",
-    fontSize: 14,
-    marginTop: 20,
-  },
-});
+
