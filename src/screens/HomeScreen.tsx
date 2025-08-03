@@ -380,7 +380,7 @@ export default function HomeScreen() {
                 <Text style={styles.viewAllText}>
                   View All {boxes.length} Boxes
                 </Text>
-                <Ionicons name="arrow-forward" size={16} color="#2563eb" />
+                <Ionicons name="arrow-forward" size={16} color={theme.colors.primary} />
               </TouchableOpacity>
             )}
           </View>
@@ -419,7 +419,7 @@ export default function HomeScreen() {
             {locations.length > 3 && (
               <TouchableOpacity style={styles.viewAllLocationsButton}>
                 <Text style={styles.viewAllText}>View All Locations</Text>
-                <Ionicons name="arrow-forward" size={16} color="#2563eb" />
+                <Ionicons name="arrow-forward" size={16} color={theme.colors.primary} />
               </TouchableOpacity>
             )}
           </View>
