@@ -85,6 +85,11 @@ export default function EditProfileScreen({ navigation }: any) {
 
     try {
       // Update profile in database
+      console.log('Updating profile directly for user:', profile?.id, 'with data:', {
+        full_name: fullName.trim(),
+        avatar_url: profileImage,
+      });
+      
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -92,7 +97,7 @@ export default function EditProfileScreen({ navigation }: any) {
           avatar_url: profileImage,
           updated_at: new Date().toISOString(),
         })
-        .eq("user_id", profile?.user_id);
+        .eq("id", profile?.id);
 
       if (profileError) throw profileError;
 

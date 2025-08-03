@@ -118,6 +118,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (!user) return { error: new Error("User not authenticated") };
 
     try {
+      console.log('Updating profile for user:', user.id, 'with data:', data);
+      
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -125,15 +127,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
           avatar_url: data.avatar_url,
           updated_at: new Date().toISOString(),
         })
-        .eq("user_id", user.id);
+        .eq("id", user.id);
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Profile update error:', profileError);
+        throw profileError;
+      }
 
       // Refresh profile data
       await refreshProfile();
 
       return { data: "Profile updated successfully" };
     } catch (error) {
+      console.error('Update profile failed:', error);
       return { error: error as Error };
     }
   };
@@ -142,13 +148,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (!user) return;
 
     try {
+      console.log('Fetching profile for user:', user.id);
+      
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("id", user.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Profile fetch error:', error);
+        throw error;
+      }
+      
+      console.log('Profile data fetched:', data);
       setProfile(data);
     } catch (error) {
       console.error("Error refreshing profile:", error);
@@ -167,11 +180,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser(session.user as AuthUser);
 
           // Get profile
-          const { data: profileData } = await supabase
+          console.log('Fetching initial profile for user:', session.user.id);
+          const { data: profileData, error: profileError } = await supabase
             .from("profiles")
             .select("*")
-            .eq("user_id", session.user.id)
+            .eq("id", session.user.id)
             .single();
+            
+          if (profileError) {
+            console.error('Initial profile fetch error:', profileError);
+          } else {
+            console.log('Initial profile data:', profileData);
+          }
 
           if (profileData) {
             setProfile(profileData);
@@ -194,11 +214,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(session.user as AuthUser);
 
         // Get profile for new user
-        const { data: profileData } = await supabase
+        console.log('Fetching profile for auth change, user:', session.user.id);
+        const { data: profileData, error: profileError } = await supabase
           .from("profiles")
           .select("*")
-          .eq("user_id", session.user.id)
+          .eq("id", session.user.id)
           .single();
+          
+        if (profileError) {
+          console.error('Auth change profile fetch error:', profileError);
+        } else {
+          console.log('Auth change profile data:', profileData);
+        }
 
         if (profileData) {
           setProfile(profileData);

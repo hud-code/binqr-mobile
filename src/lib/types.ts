@@ -10,11 +10,11 @@ export interface AuthUser {
 
 export interface Profile {
   id: string;
-  user_id: string;
   email: string;
   full_name?: string;
   avatar_url?: string;
   invite_code?: string;
+  invited_by?: string;
   created_at: string;
   updated_at: string;
 }
