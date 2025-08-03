@@ -15,10 +15,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { getStoredBoxes, getStoredLocations, searchBoxes } from "../lib/database";
 import type { Box, Location } from "../lib/types";
 import type { BrowseStackParamList } from "../navigation/BrowseStack";
+import { useTheme } from "../context/ThemeContext";
 
 type BrowseScreenNavigationProp = StackNavigationProp<BrowseStackParamList, 'BrowseMain'>;
 
 export default function BrowseScreen() {
+  const { theme } = useTheme();
   const navigation = useNavigation<BrowseScreenNavigationProp>();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");

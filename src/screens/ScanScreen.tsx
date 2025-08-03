@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 import { getBoxByQRCode } from "../lib/database";
 import type { Box } from "../lib/types";
 
 export default function ScanScreen() {
+  const { theme } = useTheme();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const [foundBox, setFoundBox] = useState<Box | null>(null);

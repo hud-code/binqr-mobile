@@ -1,6 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 
 // Stack Navigators
 import HomeStack from "./HomeStack";
@@ -14,6 +15,8 @@ import ScanScreen from "../screens/ScanScreen";
 const Tab = createBottomTabNavigator();
 
 export default function MainTabs() {
+  const { theme } = useTheme();
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -42,14 +45,21 @@ export default function MainTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#2563eb",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.textSecondary,
+        tabBarStyle: {
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.border,
+        },
         headerShown: true,
         headerStyle: {
-          backgroundColor: "#f9f9f9",
+          backgroundColor: theme.colors.surface,
+          shadowColor: theme.colors.shadow,
         },
+        headerTintColor: theme.colors.text,
         headerTitleStyle: {
           fontWeight: "bold",
+          color: theme.colors.text,
         },
       })}
     >

@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getStoredLocations, saveBox, saveLocation } from "../lib/database";
 import type { Location, CreateBoxFormData } from "../lib/types";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 type Step = "photo" | "details" | "review";
 
@@ -30,6 +31,7 @@ interface BoxDetails {
 
 export default function CreateScreen() {
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [step, setStep] = useState<Step>("photo");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [boxDetails, setBoxDetails] = useState<BoxDetails>({

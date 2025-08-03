@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { getStoredBoxes, getStoredLocations } from "../lib/database";
 import type { Box, Location } from "../lib/types";
 import type { HomeStackParamList } from "../navigation/HomeStack";
@@ -19,6 +20,7 @@ type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'HomeMai
 
 export default function HomeScreen() {
   const { profile } = useAuth();
+  const { theme } = useTheme();
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
@@ -79,6 +81,224 @@ export default function HomeScreen() {
     navigation.navigate('BoxDetails', { box });
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    header: {
+      padding: 20,
+      backgroundColor: theme.colors.surface,
+      marginBottom: 16,
+    },
+    welcomeText: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginBottom: 4,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+    },
+    statsContainer: {
+      flexDirection: "row",
+      paddingHorizontal: 20,
+      marginBottom: 24,
+      gap: 16,
+    },
+    statCard: {
+      flex: 1,
+      backgroundColor: theme.colors.surface,
+      padding: 20,
+      borderRadius: 12,
+      alignItems: "center",
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    statNumber: {
+      fontSize: 32,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginTop: 8,
+    },
+    statLabel: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      marginTop: 4,
+    },
+    quickActions: {
+      paddingHorizontal: 20,
+      marginBottom: 24,
+    },
+    sectionTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginBottom: 16,
+    },
+    actionButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: theme.colors.surface,
+      padding: 16,
+      borderRadius: 12,
+      marginBottom: 12,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    actionText: {
+      fontSize: 16,
+      color: theme.colors.text,
+      marginLeft: 12,
+      fontWeight: "500",
+    },
+    recentActivity: {
+      paddingHorizontal: 20,
+      marginBottom: 24,
+    },
+    loadingText: {
+      textAlign: "center",
+      color: theme.colors.textSecondary,
+      fontSize: 16,
+      paddingVertical: 20,
+    },
+    boxList: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 12,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    boxItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    boxIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.colors.primaryLight,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 12,
+    },
+    boxInfo: {
+      flex: 1,
+    },
+    boxName: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.colors.text,
+      marginBottom: 2,
+    },
+    boxLocation: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      marginBottom: 2,
+    },
+    boxDate: {
+      fontSize: 12,
+      color: theme.colors.textSecondary,
+    },
+    viewAllButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 16,
+      gap: 8,
+    },
+    viewAllText: {
+      fontSize: 16,
+      color: theme.colors.primary,
+      fontWeight: "600",
+    },
+    emptyState: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 12,
+      padding: 40,
+      alignItems: "center",
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    emptyStateTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    emptyStateText: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      textAlign: "center",
+      marginBottom: 20,
+    },
+    createFirstButton: {
+      backgroundColor: theme.colors.primary,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 8,
+    },
+    createFirstButtonText: {
+      color: "white",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    locationsSection: {
+      paddingHorizontal: 20,
+      marginBottom: 40,
+    },
+    locationsList: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 12,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    locationItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+      gap: 12,
+    },
+    locationName: {
+      flex: 1,
+      fontSize: 16,
+      color: theme.colors.text,
+      fontWeight: "500",
+    },
+    locationCount: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+    },
+    viewAllLocationsButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 16,
+      gap: 8,
+    },
+  });
+
   return (
     <ScrollView
       style={styles.container}
@@ -95,13 +315,13 @@ export default function HomeScreen() {
 
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
-          <Ionicons name="cube-outline" size={24} color="#2563eb" />
+          <Ionicons name="cube-outline" size={24} color={theme.colors.primary} />
           <Text style={styles.statNumber}>{boxes.length}</Text>
           <Text style={styles.statLabel}>Boxes</Text>
         </View>
 
         <View style={styles.statCard}>
-          <Ionicons name="location-outline" size={24} color="#2563eb" />
+          <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
           <Text style={styles.statNumber}>{locations.length}</Text>
           <Text style={styles.statLabel}>Locations</Text>
         </View>
@@ -111,17 +331,17 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>Quick Actions</Text>
 
         <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="add-circle-outline" size={24} color="#2563eb" />
+          <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} />
           <Text style={styles.actionText}>Create New Box</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="scan-outline" size={24} color="#2563eb" />
+          <Ionicons name="scan-outline" size={24} color={theme.colors.primary} />
           <Text style={styles.actionText}>Scan QR Code</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="search-outline" size={24} color="#2563eb" />
+          <Ionicons name="search-outline" size={24} color={theme.colors.primary} />
           <Text style={styles.actionText}>Search Boxes</Text>
         </TouchableOpacity>
       </View>
@@ -140,7 +360,7 @@ export default function HomeScreen() {
                 onPress={() => handleBoxPress(box)}
               >
                 <View style={styles.boxIcon}>
-                  <Ionicons name="cube" size={20} color="#2563eb" />
+                  <Ionicons name="cube" size={20} color={theme.colors.primary} />
                 </View>
                 <View style={styles.boxInfo}>
                   <Text style={styles.boxName}>{box.name}</Text>
@@ -151,7 +371,7 @@ export default function HomeScreen() {
                     {getRelativeTime(box.updated_at)}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={16} color="#999" />
+                <Ionicons name="chevron-forward" size={16} color={theme.colors.textSecondary} />
               </TouchableOpacity>
             ))}
 
@@ -166,7 +386,7 @@ export default function HomeScreen() {
           </View>
         ) : (
           <View style={styles.emptyState}>
-            <Ionicons name="cube-outline" size={48} color="#999" />
+            <Ionicons name="cube-outline" size={48} color={theme.colors.textSecondary} />
             <Text style={styles.emptyStateTitle}>No boxes yet</Text>
             <Text style={styles.emptyStateText}>
               Create your first storage box to get started
@@ -184,7 +404,7 @@ export default function HomeScreen() {
           <View style={styles.locationsList}>
             {locations.slice(0, 3).map((location) => (
               <View key={location.id} style={styles.locationItem}>
-                <Ionicons name="location" size={16} color="#2563eb" />
+                <Ionicons name="location" size={16} color={theme.colors.primary} />
                 <Text style={styles.locationName}>{location.name}</Text>
                 <Text style={styles.locationCount}>
                   {
@@ -211,220 +431,4 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f9f9f9",
-  },
-  header: {
-    padding: 20,
-    backgroundColor: "white",
-    marginBottom: 16,
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-  },
-  statsContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    marginBottom: 24,
-    gap: 16,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 12,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  statNumber: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 8,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 4,
-  },
-  quickActions: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 16,
-  },
-  actionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  actionText: {
-    fontSize: 16,
-    color: "#333",
-    marginLeft: 12,
-    fontWeight: "500",
-  },
-  recentActivity: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-  },
-  loadingText: {
-    textAlign: "center",
-    color: "#666",
-    fontSize: 16,
-    paddingVertical: 20,
-  },
-  boxList: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  boxItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-  },
-  boxIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#f0f9ff",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  boxInfo: {
-    flex: 1,
-  },
-  boxName: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 2,
-  },
-  boxLocation: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 2,
-  },
-  boxDate: {
-    fontSize: 12,
-    color: "#999",
-  },
-  viewAllButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-    gap: 8,
-  },
-  viewAllText: {
-    fontSize: 16,
-    color: "#2563eb",
-    fontWeight: "600",
-  },
-  emptyState: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 40,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  emptyStateTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptyStateText: {
-    fontSize: 14,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  createFirstButton: {
-    backgroundColor: "#2563eb",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  createFirstButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  locationsSection: {
-    paddingHorizontal: 20,
-    marginBottom: 40,
-  },
-  locationsList: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  locationItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-    gap: 12,
-  },
-  locationName: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-    fontWeight: "500",
-  },
-  locationCount: {
-    fontSize: 14,
-    color: "#666",
-  },
-  viewAllLocationsButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-    gap: 8,
-  },
-});
+
