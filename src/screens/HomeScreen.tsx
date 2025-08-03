@@ -6,22 +6,24 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
-  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "../context/AuthContext";
 import { getStoredBoxes, getStoredLocations } from "../lib/database";
 import type { Box, Location } from "../lib/types";
-import BoxDetailsScreen from "./BoxDetailsScreen";
+import type { HomeStackParamList } from "../navigation/HomeStack";
+
+type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'HomeMain'>;
 
 export default function HomeScreen() {
   const { profile } = useAuth();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedBox, setSelectedBox] = useState<Box | null>(null);
-  const [showBoxDetails, setShowBoxDetails] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -67,26 +69,7 @@ export default function HomeScreen() {
   };
 
   const handleBoxPress = (box: Box) => {
-    setSelectedBox(box);
-    setShowBoxDetails(true);
-  };
-
-  const handleBoxUpdated = (updatedBox: Box) => {
-    setBoxes(boxes.map((box) => (box.id === updatedBox.id ? updatedBox : box)));
-    setSelectedBox(updatedBox);
-  };
-
-  const handleBoxDeleted = () => {
-    if (selectedBox) {
-      setBoxes(boxes.filter((box) => box.id !== selectedBox.id));
-      setShowBoxDetails(false);
-      setSelectedBox(null);
-    }
-  };
-
-  const handleCloseBoxDetails = () => {
-    setShowBoxDetails(false);
-    setSelectedBox(null);
+    navigation.navigate('BoxDetails', { box });
   };
 
   return (
@@ -216,20 +199,7 @@ export default function HomeScreen() {
         </View>
       )}
 
-      {selectedBox && (
-        <Modal
-          visible={showBoxDetails}
-          animationType="slide"
-          onRequestClose={handleCloseBoxDetails}
-        >
-          <BoxDetailsScreen
-            box={selectedBox}
-            onClose={handleCloseBoxDetails}
-            onBoxUpdated={handleBoxUpdated}
-            onBoxDeleted={handleBoxDeleted}
-          />
-        </Modal>
-      )}
+
     </ScrollView>
   );
 }

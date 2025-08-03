@@ -2,11 +2,13 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-// Screens
-import HomeScreen from "../screens/HomeScreen";
+// Stack Navigators
+import HomeStack from "./HomeStack";
+import SearchStack from "./SearchStack";
+
+// Direct Screens
 import CreateScreen from "../screens/CreateScreen";
 import ScanScreen from "../screens/ScanScreen";
-import SearchScreen from "../screens/SearchScreen";
 import LocationsScreen from "../screens/LocationsScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
@@ -57,7 +59,7 @@ export default function MainTabs() {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{ title: "BinQR" }}
       />
       <Tab.Screen
@@ -72,7 +74,7 @@ export default function MainTabs() {
       />
       <Tab.Screen
         name="Search"
-        component={SearchScreen}
+        component={SearchStack}
         options={{ title: "Search" }}
       />
       <Tab.Screen

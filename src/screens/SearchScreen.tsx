@@ -7,22 +7,24 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { searchBoxes, getStoredLocations } from "../lib/database";
 import type { Box, Location } from "../lib/types";
-import BoxDetailsScreen from "./BoxDetailsScreen";
+import type { SearchStackParamList } from "../navigation/SearchStack";
+
+type SearchScreenNavigationProp = StackNavigationProp<SearchStackParamList, 'SearchMain'>;
 
 export default function SearchScreen() {
+  const navigation = useNavigation<SearchScreenNavigationProp>();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [locations, setLocations] = useState<Location[]>([]);
   const [searchResults, setSearchResults] = useState<Box[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [selectedBox, setSelectedBox] = useState<Box | null>(null);
-  const [showBoxDetails, setShowBoxDetails] = useState(false);
 
   useEffect(() => {
     loadLocations();
@@ -68,30 +70,7 @@ export default function SearchScreen() {
   };
 
   const handleBoxPress = (box: Box) => {
-    setSelectedBox(box);
-    setShowBoxDetails(true);
-  };
-
-  const handleBoxUpdated = (updatedBox: Box) => {
-    setSearchResults(
-      searchResults.map((box) => (box.id === updatedBox.id ? updatedBox : box))
-    );
-    setSelectedBox(updatedBox);
-  };
-
-  const handleBoxDeleted = () => {
-    if (selectedBox) {
-      setSearchResults(
-        searchResults.filter((box) => box.id !== selectedBox.id)
-      );
-      setShowBoxDetails(false);
-      setSelectedBox(null);
-    }
-  };
-
-  const handleCloseBoxDetails = () => {
-    setShowBoxDetails(false);
-    setSelectedBox(null);
+    navigation.navigate('BoxDetails', { box });
   };
 
   const getRelativeTime = (dateString: string): string => {
@@ -320,20 +299,7 @@ export default function SearchScreen() {
 
       {renderResults()}
 
-      {selectedBox && (
-        <Modal
-          visible={showBoxDetails}
-          animationType="slide"
-          onRequestClose={handleCloseBoxDetails}
-        >
-          <BoxDetailsScreen
-            box={selectedBox}
-            onClose={handleCloseBoxDetails}
-            onBoxUpdated={handleBoxUpdated}
-            onBoxDeleted={handleBoxDeleted}
-          />
-        </Modal>
-      )}
+
     </View>
   );
 }

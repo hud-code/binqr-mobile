@@ -14,6 +14,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import QRCode from "react-native-qrcode-svg";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import {
   getStoredLocations,
@@ -22,20 +24,16 @@ import {
   generateNewQRCode,
 } from "../lib/database";
 import type { Box, Location } from "../lib/types";
+import type { HomeStackParamList } from "../navigation/HomeStack";
+import type { SearchStackParamList } from "../navigation/SearchStack";
 
-interface BoxDetailsScreenProps {
-  box: Box;
-  onBoxUpdated: (updatedBox: Box) => void;
-  onBoxDeleted: () => void;
-  onClose: () => void;
-}
+type BoxDetailsNavigation = StackNavigationProp<HomeStackParamList | SearchStackParamList, 'BoxDetails'>;
+type BoxDetailsRoute = RouteProp<HomeStackParamList | SearchStackParamList, 'BoxDetails'>;
 
-export default function BoxDetailsScreen({
-  box,
-  onBoxUpdated,
-  onBoxDeleted,
-  onClose,
-}: BoxDetailsScreenProps) {
+export default function BoxDetailsScreen() {
+  const navigation = useNavigation<BoxDetailsNavigation>();
+  const route = useRoute<BoxDetailsRoute>();
+  const { box } = route.params;
   const [editedBox, setEditedBox] = useState<Box>(box);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -121,7 +119,7 @@ export default function BoxDetailsScreen({
       });
 
       if (updatedBox) {
-        onBoxUpdated(updatedBox);
+        setEditedBox(updatedBox);
         setIsEditing(false);
         Alert.alert("Success", "Box updated successfully!");
       } else {
@@ -148,8 +146,9 @@ export default function BoxDetailsScreen({
             try {
               const success = await deleteBox(editedBox.id);
               if (success) {
-                Alert.alert("Success", "Box deleted successfully!");
-                onBoxDeleted();
+                Alert.alert("Success", "Box deleted successfully!", [
+                  { text: "OK", onPress: () => navigation.goBack() }
+                ]);
               } else {
                 Alert.alert("Error", "Failed to delete box");
               }
@@ -215,14 +214,8 @@ export default function BoxDetailsScreen({
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Ionicons name="close" size={24} color="#333" />
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>Box Details</Text>
-
+      {/* Edit Button Header */}
+      <View style={styles.editHeader}>
         <TouchableOpacity
           style={styles.editButton}
           onPress={() => setIsEditing(!isEditing)}
@@ -232,6 +225,9 @@ export default function BoxDetailsScreen({
             size={24}
             color="#2563eb"
           />
+          <Text style={styles.editButtonText}>
+            {isEditing ? "Done" : "Edit"}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -470,25 +466,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f9f9f9",
   },
-  header: {
+  editHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
-    padding: 20,
+    padding: 16,
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
   },
-  closeButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
   editButton: {
+    flexDirection: "row",
+    alignItems: "center",
     padding: 8,
+    backgroundColor: "#f0f9ff",
+    borderRadius: 8,
+    gap: 4,
+  },
+  editButtonText: {
+    color: "#2563eb",
+    fontSize: 14,
+    fontWeight: "600",
   },
   content: {
     flex: 1,
