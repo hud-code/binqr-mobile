@@ -226,17 +226,34 @@ export default function BoxDetailsScreen() {
     <View style={styles.container}>
       {/* Edit Button Header */}
       <View style={styles.editHeader}>
+        {isEditing && (
+          <TouchableOpacity
+            style={[styles.editButton, styles.cancelButton]}
+            onPress={() => {
+              setEditedBox(box); // Reset to original data
+              setIsEditing(false);
+            }}
+          >
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+        )}
+        
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => setIsEditing(!isEditing)}
+          onPress={isEditing ? handleSaveChanges : () => setIsEditing(true)}
+          disabled={isEditing && isLoading}
         >
-          <Ionicons
-            name={isEditing ? "checkmark" : "pencil"}
-            size={24}
-            color="#2563eb"
-          />
+          {isEditing && isLoading ? (
+            <ActivityIndicator size="small" color="#2563eb" />
+          ) : (
+            <Ionicons
+              name={isEditing ? "checkmark" : "pencil"}
+              size={24}
+              color="#2563eb"
+            />
+          )}
           <Text style={styles.editButtonText}>
-            {isEditing ? "Done" : "Edit"}
+            {isEditing ? "Save" : "Edit"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -484,6 +501,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
+    gap: 12,
   },
   editButton: {
     flexDirection: "row",
@@ -495,6 +513,14 @@ const styles = StyleSheet.create({
   },
   editButtonText: {
     color: "#2563eb",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  cancelButton: {
+    backgroundColor: "#f3f4f6",
+  },
+  cancelButtonText: {
+    color: "#666",
     fontSize: 14,
     fontWeight: "600",
   },
