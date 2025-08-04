@@ -212,8 +212,8 @@ export default function SettingsScreen() {
           <TouchableOpacity style={styles.settingItem} onPress={handleAppearance}>
             <Ionicons name="color-palette-outline" size={24} color={theme.colors.primary} />
             <View style={styles.settingWithValue}>
-              <Text style={[styles.settingText, { color: theme.colors.text }]}>Appearance</Text>
-              <Text style={[styles.settingValue, { color: theme.colors.textSecondary }]}>
+              <Text style={[styles.settingText, { color: theme.colors.text, marginLeft: 0 }]}>Appearance</Text>
+              <Text style={styles.settingValue}>
                 {getThemeModeLabel()}
               </Text>
             </View>
@@ -222,7 +222,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity style={styles.settingItem} onPress={handleBackupSync}>
             <Ionicons name="cloud-outline" size={24} color={theme.colors.primary} />
-            <Text style={[styles.settingText, { color: theme.colors.text }]}>Backup & Sync</Text>
+            <Text style={styles.settingText}>Backup & Sync</Text>
             <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
