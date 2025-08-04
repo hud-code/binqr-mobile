@@ -56,7 +56,6 @@ export interface SignUpFormData {
   password: string;
   confirmPassword: string;
   fullName?: string;
-  inviteCode: string;
 }
 
 export interface CreateBoxFormData {

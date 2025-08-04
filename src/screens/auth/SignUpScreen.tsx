@@ -22,13 +22,12 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [inviteCode, setInviteCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSignUp = async () => {
-    if (!fullName.trim() || !email || !password || !confirmPassword || !inviteCode) {
+    if (!fullName.trim() || !email || !password || !confirmPassword) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -54,7 +53,6 @@ export default function SignUpScreen() {
         email,
         password,
         full_name: fullName.trim(),
-        invite_code: inviteCode,
       });
 
       if (error) {
@@ -79,13 +77,18 @@ export default function SignUpScreen() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+      >
         <View style={styles.header}>
           <View style={styles.logoContainer}>
             <Ionicons name="cube" size={48} color="#2563eb" />
           </View>
           <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Join BinQR to organize your storage</Text>
+          <Text style={styles.subtitle}>
+            Join BinQR to organize your storage
+          </Text>
         </View>
 
         <View style={styles.form}>
@@ -162,23 +165,11 @@ export default function SignUpScreen() {
             </View>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Invite Code</Text>
-            <TextInput
-              style={styles.input}
-              value={inviteCode}
-              onChangeText={setInviteCode}
-              placeholder="Enter your invite code"
-              autoCapitalize="characters"
-              returnKeyType="done"
-            />
-            <Text style={styles.helperText}>
-              Ask a current user for an invite code
-            </Text>
-          </View>
-
           <TouchableOpacity
-            style={[styles.signUpButton, isLoading && styles.signUpButtonDisabled]}
+            style={[
+              styles.signUpButton,
+              isLoading && styles.signUpButtonDisabled,
+            ]}
             onPress={handleSignUp}
             disabled={isLoading}
           >
@@ -199,7 +190,7 @@ export default function SignUpScreen() {
           </View>
 
           <View style={styles.socialButtons}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.socialButton}
               onPress={signInWithApple}
             >
@@ -207,7 +198,7 @@ export default function SignUpScreen() {
               <Text style={styles.socialButtonText}>Apple</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.socialButton}
               onPress={signInWithGoogle}
             >
@@ -221,139 +212,140 @@ export default function SignUpScreen() {
   );
 }
 
-const createStyles = (theme: any) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  content: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    padding: 20,
-  },
-  header: {
-    alignItems: "center",
-    marginTop: 40,
-    marginBottom: 40,
-  },
-  logoContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: theme.colors.primaryLight,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: theme.colors.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: theme.colors.textSecondary,
-    textAlign: "center",
-  },
-  form: {
-    flex: 1,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: theme.colors.text,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: theme.colors.inputBackground,
-    color: theme.colors.text,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: 8,
-    backgroundColor: theme.colors.inputBackground,
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 12,
-    fontSize: 16,
-    color: theme.colors.text,
-  },
-  eyeButton: {
-    padding: 12,
-  },
-  helperText: {
-    fontSize: 12,
-    color: theme.colors.textSecondary,
-    marginTop: 4,
-  },
-  signUpButton: {
-    backgroundColor: theme.colors.primary,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 16,
-    borderRadius: 8,
-    marginTop: 20,
-    gap: 8,
-  },
-  signUpButtonDisabled: {
-    backgroundColor: theme.colors.disabled,
-  },
-  signUpButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  divider: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 30,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: theme.colors.border,
-  },
-  dividerText: {
-    marginHorizontal: 16,
-    fontSize: 14,
-    color: theme.colors.textSecondary,
-  },
-  socialButtons: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 20,
-  },
-  socialButton: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-    gap: 8,
-  },
-  socialButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: theme.colors.text,
-  },
-});
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    content: {
+      flex: 1,
+    },
+    contentContainer: {
+      flexGrow: 1,
+      padding: 20,
+    },
+    header: {
+      alignItems: "center",
+      marginTop: 40,
+      marginBottom: 40,
+    },
+    logoContainer: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: theme.colors.primaryLight,
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 16,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+      textAlign: "center",
+    },
+    form: {
+      flex: 1,
+    },
+    inputGroup: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.colors.text,
+      marginBottom: 8,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 8,
+      padding: 12,
+      fontSize: 16,
+      backgroundColor: theme.colors.inputBackground,
+      color: theme.colors.text,
+    },
+    passwordContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 8,
+      backgroundColor: theme.colors.inputBackground,
+    },
+    passwordInput: {
+      flex: 1,
+      padding: 12,
+      fontSize: 16,
+      color: theme.colors.text,
+    },
+    eyeButton: {
+      padding: 12,
+    },
+    helperText: {
+      fontSize: 12,
+      color: theme.colors.textSecondary,
+      marginTop: 4,
+    },
+    signUpButton: {
+      backgroundColor: theme.colors.primary,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 16,
+      borderRadius: 8,
+      marginTop: 20,
+      gap: 8,
+    },
+    signUpButtonDisabled: {
+      backgroundColor: theme.colors.disabled,
+    },
+    signUpButtonText: {
+      color: "white",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    divider: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: 30,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: theme.colors.border,
+    },
+    dividerText: {
+      marginHorizontal: 16,
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+    },
+    socialButtons: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 20,
+    },
+    socialButton: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 12,
+      borderRadius: 8,
+      backgroundColor: "white",
+      borderWidth: 1,
+      borderColor: "#e5e7eb",
+      gap: 8,
+    },
+    socialButtonText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: theme.colors.text,
+    },
+  });

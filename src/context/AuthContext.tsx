@@ -60,7 +60,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     email: string;
     password: string;
     full_name?: string;
-    invite_code: string;
   }) => {
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -69,7 +68,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         options: {
           data: {
             full_name: signUpData.full_name,
-            invite_code: signUpData.invite_code,
           },
         },
       });
