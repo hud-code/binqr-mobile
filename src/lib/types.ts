@@ -4,6 +4,7 @@
 export interface AuthUser {
   id: string;
   email: string;
+  email_confirmed_at?: string;
   created_at: string;
   updated_at: string;
 }
@@ -15,6 +16,7 @@ export interface Profile {
   avatar_url?: string;
   invite_code?: string;
   invited_by?: string;
+  has_completed_onboarding?: boolean;
   created_at: string;
   updated_at: string;
 }
