@@ -11,11 +11,13 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 
 export default function LoginScreen() {
   const { theme } = useTheme();
+  const navigation = useNavigation();
   const { signIn, signInWithApple, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -142,7 +144,12 @@ export default function LoginScreen() {
 
           <Text style={styles.signUpText}>
             Don't have an account?{" "}
-            <Text style={styles.signUpLink}>Sign up</Text>
+            <Text 
+              style={styles.signUpLink}
+              onPress={() => navigation.navigate('SignUp' as never)}
+            >
+              Sign up
+            </Text>
           </Text>
         </View>
       </ScrollView>
