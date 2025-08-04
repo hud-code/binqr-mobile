@@ -654,7 +654,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.colors.inputBackground,
     color: theme.colors.text,
   },
   textArea: {

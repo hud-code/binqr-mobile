@@ -8,6 +8,7 @@ export interface Theme {
   colors: {
     background: string;
     surface: string;
+    inputBackground: string;
     primary: string;
     primaryLight: string;
     text: string;
@@ -30,6 +31,7 @@ const lightTheme: Theme = {
   colors: {
     background: "#f9f9f9",
     surface: "#ffffff",
+    inputBackground: "#ffffff",
     primary: "#2563eb",
     primaryLight: "#f0f9ff",
     text: "#333333",
@@ -52,6 +54,7 @@ const darkTheme: Theme = {
   colors: {
     background: "#0f172a",
     surface: "#1e293b",
+    inputBackground: "#374151",
     primary: "#3b82f6",
     primaryLight: "#3b82f6",
     text: "#f8fafc",

@@ -401,7 +401,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   searchInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.inputBackground,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
