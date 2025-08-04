@@ -12,11 +12,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useNavigation } from "@react-navigation/native";
+import { isAdmin } from "../lib/admin";
 
 export default function SettingsScreen() {
-  const { profile, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const { theme, themeMode } = useTheme();
   const navigation = useNavigation();
+  
+  const showAdminFeatures = isAdmin(user, profile);
 
   const handleSignOut = () => {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
@@ -54,6 +57,18 @@ export default function SettingsScreen() {
 
   const handleAppearance = () => {
     navigation.navigate("ThemeSettings" as never);
+  };
+
+  const handleLoginViewer = () => {
+    navigation.navigate("LoginViewer" as never);
+  };
+
+  const handleLoginTester = () => {
+    navigation.navigate("LoginTester" as never);
+  };
+
+  const handleLoginFlowGuide = () => {
+    navigation.navigate("LoginFlowGuide" as never);
   };
 
   const getThemeModeLabel = () => {
@@ -158,6 +173,12 @@ export default function SettingsScreen() {
       fontSize: 14,
       marginTop: 20,
     },
+    sectionTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.colors.text,
+      marginBottom: 8,
+    },
   });
 
   return (
@@ -226,6 +247,39 @@ export default function SettingsScreen() {
             <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         </View>
+
+        {/* Admin Features - Only visible to admin users */}
+        {showAdminFeatures && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { 
+              color: theme.colors.error, 
+              fontSize: 14, 
+              fontWeight: "600",
+              marginBottom: 16,
+              textAlign: "center"
+            }]}>
+              🔧 ADMIN TESTING FEATURES
+            </Text>
+
+            <TouchableOpacity style={styles.settingItem} onPress={handleLoginViewer}>
+              <Ionicons name="eye-outline" size={24} color={theme.colors.primary} />
+              <Text style={styles.settingText}>View Login Page</Text>
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.settingItem} onPress={handleLoginTester}>
+              <Ionicons name="flask-outline" size={24} color={theme.colors.primary} />
+              <Text style={styles.settingText}>Test Login Service</Text>
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.settingItem} onPress={handleLoginFlowGuide}>
+              <Ionicons name="map-outline" size={24} color={theme.colors.primary} />
+              <Text style={styles.settingText}>Login Flow Guide</Text>
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* App Info */}
         <View style={styles.section}>

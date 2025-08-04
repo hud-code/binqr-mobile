@@ -3,12 +3,18 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../screens/SettingsScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import ThemeSettingsScreen from "../screens/ThemeSettingsScreen";
+import LoginViewerScreen from "../screens/admin/LoginViewerScreen";
+import LoginTesterScreen from "../screens/admin/LoginTesterScreen";
+import LoginFlowGuideScreen from "../screens/admin/LoginFlowGuideScreen";
 import { useTheme } from "../context/ThemeContext";
 
 export type SettingsStackParamList = {
   SettingsMain: undefined;
   EditProfile: undefined;
   ThemeSettings: undefined;
+  LoginViewer: undefined;
+  LoginTester: undefined;
+  LoginFlowGuide: undefined;
 };
 
 const Stack = createStackNavigator<SettingsStackParamList>();
@@ -48,6 +54,30 @@ export default function SettingsStack() {
         component={ThemeSettingsScreen} 
         options={{ 
           title: "Appearance",
+          headerBackTitleVisible: false,
+        }} 
+      />
+      <Stack.Screen 
+        name="LoginViewer" 
+        component={LoginViewerScreen} 
+        options={{ 
+          title: "Login Page Viewer",
+          headerBackTitleVisible: false,
+        }} 
+      />
+      <Stack.Screen 
+        name="LoginTester" 
+        component={LoginTesterScreen} 
+        options={{ 
+          title: "Login Service Tester",
+          headerBackTitleVisible: false,
+        }} 
+      />
+      <Stack.Screen 
+        name="LoginFlowGuide" 
+        component={LoginFlowGuideScreen} 
+        options={{ 
+          title: "Login Flow Guide",
           headerBackTitleVisible: false,
         }} 
       />
