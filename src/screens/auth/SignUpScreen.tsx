@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ navigation }: { navigation: any }) {
   const { theme } = useTheme();
   const { signUp, signInWithApple, signInWithGoogle } = useAuth();
   const [fullName, setFullName] = useState("");
@@ -58,10 +58,8 @@ export default function SignUpScreen() {
       if (error) {
         Alert.alert("Sign Up Failed", error.message);
       } else {
-        Alert.alert(
-          "Check Your Email",
-          "We've sent you a confirmation link. Please check your email to complete your registration."
-        );
+        // Navigate to email verification screen
+        navigation.navigate("EmailVerification", { email });
       }
     } catch (err) {
       Alert.alert("Error", "An unexpected error occurred");

@@ -7,6 +7,10 @@ import { useTheme } from "../context/ThemeContext";
 // Auth screens
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignUpScreen from "../screens/auth/SignUpScreen";
+import EmailVerificationScreen from "../screens/auth/EmailVerificationScreen";
+
+// Onboarding screens
+import GuidedStepsScreen from "../screens/onboarding/GuidedStepsScreen";
 
 // Main app tabs (we'll import this when we create it)
 import MainTabs from "./MainTabs";
@@ -38,7 +42,7 @@ function LoadingScreen() {
 }
 
 export default function AuthStack() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, isEmailVerified, needsOnboarding } = useAuth();
   const { theme } = useTheme();
 
   if (isLoading) {
@@ -53,13 +57,26 @@ export default function AuthStack() {
       }}
     >
       {isAuthenticated ? (
-        // Authenticated screens
-        <Stack.Screen name="MainApp" component={MainTabs} />
+        // User is authenticated, check email verification and onboarding status
+        <>
+          {!isEmailVerified ? (
+            // User is signed up but email not verified
+            <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} />
+          ) : needsOnboarding ? (
+            // Email verified but needs onboarding
+            <Stack.Screen name="GuidedSteps" component={GuidedStepsScreen} />
+          ) : (
+            // Fully authenticated and onboarded
+            <Stack.Screen name="MainApp" component={MainTabs} />
+          )}
+        </>
       ) : (
-        // Auth screens
+        // Not authenticated - show auth screens
         <>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} />
+          <Stack.Screen name="GuidedSteps" component={GuidedStepsScreen} />
         </>
       )}
     </Stack.Navigator>

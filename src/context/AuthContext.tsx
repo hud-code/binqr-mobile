@@ -8,6 +8,8 @@ interface AuthContextType {
   profile: Profile | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isEmailVerified: boolean;
+  needsOnboarding: boolean;
   signIn: (
     email: string,
     password: string
@@ -16,7 +18,7 @@ interface AuthContextType {
     email: string;
     password: string;
     full_name?: string;
-    invite_code: string;
+    invite_code?: string;
   }) => Promise<{ data?: any; error?: Error }>;
   signInWithApple: () => Promise<{ data?: any; error?: Error }>;
   signInWithGoogle: () => Promise<{ data?: any; error?: Error }>;
@@ -26,6 +28,9 @@ interface AuthContextType {
   }) => Promise<{ data?: any; error?: Error }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  checkEmailVerification: () => Promise<boolean>;
+  resendVerificationEmail: (email: string) => Promise<{ data?: any; error?: Error }>;
+  completeOnboarding: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -40,6 +45,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = !!user;
+  const isEmailVerified = !!user?.email_confirmed_at;
+  const needsOnboarding = !!profile && !profile.has_completed_onboarding;
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -175,6 +182,56 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const checkEmailVerification = async (): Promise<boolean> => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email_confirmed_at) {
+        setUser(session.user as AuthUser);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error checking email verification:", error);
+      return false;
+    }
+  };
+
+  const resendVerificationEmail = async (email: string) => {
+    try {
+      const { data, error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) throw error;
+
+      return { data };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const completeOnboarding = async () => {
+    if (!user || !profile) return;
+
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          has_completed_onboarding: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+
+      if (error) throw error;
+
+      // Refresh profile to update local state
+      await refreshProfile();
+    } catch (error) {
+      console.error("Error completing onboarding:", error);
+    }
+  };
+
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
@@ -254,6 +311,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     profile,
     isLoading,
     isAuthenticated,
+    isEmailVerified,
+    needsOnboarding,
     signIn,
     signUp,
     signInWithApple,
@@ -261,6 +320,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     updateProfile,
     signOut,
     refreshProfile,
+    checkEmailVerification,
+    resendVerificationEmail,
+    completeOnboarding,
   };
 
   return (
