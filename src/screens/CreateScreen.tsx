@@ -540,13 +540,13 @@ const createStyles = (theme: any) => StyleSheet.create({
   stepTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginTop: 16,
     marginBottom: 8,
   },
   stepSubtitle: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
     textAlign: "center",
   },
   imageContainer: {
@@ -570,12 +570,12 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: theme.colors.border,
     gap: 8,
   },
   retakeText: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
   },
   continueButton: {
     flexDirection: "row",
@@ -588,7 +588,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   continueText: {
     fontSize: 16,
-    color: "white",
+    color: theme.colors.surface,
     fontWeight: "600",
   },
   photoButton: {
@@ -596,7 +596,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     padding: 40,
     borderRadius: 12,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -605,19 +605,19 @@ const createStyles = (theme: any) => StyleSheet.create({
   photoButtonText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: theme.colors.text,
     marginTop: 16,
   },
   photoButtonSubtext: {
     fontSize: 14,
-    color: "#666",
+    color: theme.colors.textSecondary,
     marginTop: 4,
   },
   form: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     padding: 20,
     borderRadius: 12,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -629,7 +629,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 8,
   },
   labelRow: {
@@ -650,11 +650,12 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.surface,
+    color: theme.colors.text,
   },
   textArea: {
     height: 80,
@@ -678,7 +679,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingVertical: 8,
   },
   cancelButtonText: {
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontSize: 14,
   },
   createButton: {
@@ -688,13 +689,13 @@ const createStyles = (theme: any) => StyleSheet.create({
     borderRadius: 6,
   },
   createButtonText: {
-    color: "white",
+    color: theme.colors.surface,
     fontSize: 14,
     fontWeight: "600",
   },
   locationPicker: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     backgroundColor: theme.colors.background,
     maxHeight: 150,
@@ -712,7 +713,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   locationOptionText: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
   },
   locationOptionTextSelected: {
     color: "#2563eb",
@@ -750,7 +751,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   submitButtonText: {
     fontSize: 16,
-    color: "white",
+    color: theme.colors.surface,
     fontWeight: "600",
   },
   reviewContent: {
@@ -760,7 +761,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 12,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -769,7 +770,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   reviewSectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 16,
   },
   reviewGrid: {
@@ -782,12 +783,12 @@ const createStyles = (theme: any) => StyleSheet.create({
   reviewLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#666",
+    color: theme.colors.textSecondary,
     marginBottom: 4,
   },
   reviewValue: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 12,
   },
   reviewImage: {
@@ -800,7 +801,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -812,7 +813,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   qrCodeText: {
     fontSize: 12,
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontFamily: "monospace",
   },
   saveButton: {
@@ -823,7 +824,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 16,
-    color: "white",
+    color: theme.colors.surface,
     fontWeight: "600",
   },
 });

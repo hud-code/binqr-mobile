@@ -736,7 +736,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingBottom: 34, // Account for safe area
     borderTopWidth: 1,
     borderTopColor: "#e5e7eb",
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -787,7 +787,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.success,
   },
   saveButtonText: {
-    color: "white",
+    color: theme.colors.surface,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -797,7 +797,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     borderColor: "#d1d5db",
   },
   cancelButtonText: {
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -839,7 +839,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     gap: 4,
   },
   updateImageText: {
-    color: "white",
+    color: theme.colors.surface,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -849,7 +849,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     marginTop: 0,
     padding: 20,
     borderRadius: 12,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -861,20 +861,21 @@ const createStyles = (theme: any) => StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
     backgroundColor: theme.colors.surface,
+    color: theme.colors.text,
   },
   inputReadonly: {
     backgroundColor: theme.colors.background,
-    color: "#666",
+    color: theme.colors.textSecondary,
   },
   textArea: {
     height: 80,
@@ -887,7 +888,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   locationText: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
   },
   metadataSection: {
     borderTopWidth: 1,
@@ -902,12 +903,12 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   metadataLabel: {
     fontSize: 14,
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontWeight: "600",
   },
   metadataValue: {
     fontSize: 14,
-    color: "#333",
+    color: theme.colors.text,
   },
   qrSection: {
     backgroundColor: theme.colors.surface,
@@ -916,7 +917,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -925,7 +926,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 16,
   },
   qrContainer: {
@@ -934,7 +935,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   qrCodeText: {
     fontSize: 12,
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontFamily: "monospace",
   },
   qrActions: {
@@ -969,7 +970,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   deleteWarning: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 16,
     textAlign: "center",
   },
@@ -982,7 +983,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   deleteConfirmInput: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -1003,7 +1004,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.disabled,
   },
   cancelDeleteText: {
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -1014,7 +1015,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.disabled,
   },
   confirmDeleteText: {
-    color: "white",
+    color: theme.colors.surface,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -1046,7 +1047,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: theme.colors.text,
   },
   locationList: {
     maxHeight: 300,
@@ -1073,7 +1074,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   newLocationInput: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -1093,7 +1094,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   cancelLocationText: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontWeight: "600",
   },
   createLocationButton: {
@@ -1105,7 +1106,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   createLocationText: {
     fontSize: 16,
-    color: "white",
+    color: theme.colors.surface,
     fontWeight: "600",
   },
   locationOption: {
@@ -1121,7 +1122,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   locationOptionText: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
   },
   locationOptionTextSelected: {
     color: "#2563eb",

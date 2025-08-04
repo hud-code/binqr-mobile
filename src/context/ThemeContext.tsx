@@ -53,7 +53,7 @@ const darkTheme: Theme = {
     background: "#0f172a",
     surface: "#1e293b",
     primary: "#3b82f6",
-    primaryLight: "#1e3a8a",
+    primaryLight: "#3b82f6",
     text: "#f8fafc",
     textSecondary: "#cbd5e1",
     border: "#374151",

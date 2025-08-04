@@ -250,12 +250,12 @@ const createStyles = (theme: any) => StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
     textAlign: "center",
   },
   form: {
@@ -267,36 +267,38 @@ const createStyles = (theme: any) => StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
+    color: theme.colors.text,
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: theme.colors.border,
     borderRadius: 8,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
   },
   passwordInput: {
     flex: 1,
     padding: 12,
     fontSize: 16,
+    color: theme.colors.text,
   },
   eyeButton: {
     padding: 12,
   },
   helperText: {
     fontSize: 12,
-    color: "#666",
+    color: theme.colors.textSecondary,
     marginTop: 4,
   },
   signUpButton: {
@@ -330,7 +332,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   dividerText: {
     marginHorizontal: 16,
     fontSize: 14,
-    color: "#666",
+    color: theme.colors.textSecondary,
   },
   socialButtons: {
     flexDirection: "row",
@@ -352,6 +354,6 @@ const createStyles = (theme: any) => StyleSheet.create({
   socialButtonText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#333",
+    color: theme.colors.text,
   },
 });

@@ -310,6 +310,7 @@ const createStyles = (theme: any) =>
       padding: 12,
       fontSize: 16,
       backgroundColor: theme.colors.surface,
+      color: theme.colors.text,
     },
     helperText: {
       fontSize: 12,
