@@ -123,7 +123,7 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.socialButtons}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.socialButton}
               onPress={signInWithApple}
             >
@@ -131,7 +131,7 @@ export default function LoginScreen() {
               <Text style={styles.socialButtonText}>Apple</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.socialButton}
               onPress={signInWithGoogle}
             >
@@ -142,7 +142,7 @@ export default function LoginScreen() {
 
           <Text style={styles.signUpText}>
             Don't have an account?{" "}
-            <Text style={styles.signUpLink}>Sign up with invite code</Text>
+            <Text style={styles.signUpLink}>Sign up</Text>
           </Text>
         </View>
       </ScrollView>
@@ -150,137 +150,138 @@ export default function LoginScreen() {
   );
 }
 
-const createStyles = (theme: any) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  logo: {
-    fontSize: 48,
-    fontWeight: "bold",
-    color: "#2563eb",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: theme.colors.textSecondary,
-  },
-  form: {
-    backgroundColor: theme.colors.surface,
-    padding: 24,
-    borderRadius: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: theme.colors.text,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: theme.colors.surface,
-    color: theme.colors.text,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: 8,
-    backgroundColor: theme.colors.inputBackground,
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 12,
-    fontSize: 16,
-  },
-  eyeButton: {
-    padding: 12,
-    justifyContent: "center",
-  },
-  signInButton: {
-    backgroundColor: theme.colors.primary,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-    borderRadius: 8,
-    marginTop: 8,
-    gap: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: theme.colors.disabled,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  signUpText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 16,
-    color: theme.colors.textSecondary,
-  },
-  signUpLink: {
-    color: "#2563eb",
-    fontWeight: "600",
-  },
-  divider: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: theme.colors.border,
-  },
-  dividerText: {
-    marginHorizontal: 16,
-    fontSize: 14,
-    color: theme.colors.textSecondary,
-  },
-  socialButtons: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 20,
-  },
-  socialButton: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: theme.colors.background,
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
-    gap: 8,
-  },
-  socialButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: theme.colors.text,
-  },
-});
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: "center",
+      padding: 20,
+    },
+    header: {
+      alignItems: "center",
+      marginBottom: 40,
+    },
+    logo: {
+      fontSize: 48,
+      fontWeight: "bold",
+      color: "#2563eb",
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 18,
+      color: theme.colors.textSecondary,
+    },
+    form: {
+      backgroundColor: theme.colors.surface,
+      padding: 24,
+      borderRadius: 16,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    inputContainer: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.colors.text,
+      marginBottom: 8,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 8,
+      padding: 12,
+      fontSize: 16,
+      backgroundColor: theme.colors.surface,
+      color: theme.colors.text,
+    },
+    passwordContainer: {
+      flexDirection: "row",
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 8,
+      backgroundColor: theme.colors.inputBackground,
+    },
+    passwordInput: {
+      flex: 1,
+      padding: 12,
+      fontSize: 16,
+    },
+    eyeButton: {
+      padding: 12,
+      justifyContent: "center",
+    },
+    signInButton: {
+      backgroundColor: theme.colors.primary,
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 16,
+      borderRadius: 8,
+      marginTop: 8,
+      gap: 8,
+    },
+    buttonDisabled: {
+      backgroundColor: theme.colors.disabled,
+    },
+    buttonText: {
+      color: "white",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    signUpText: {
+      textAlign: "center",
+      marginTop: 20,
+      fontSize: 16,
+      color: theme.colors.textSecondary,
+    },
+    signUpLink: {
+      color: "#2563eb",
+      fontWeight: "600",
+    },
+    divider: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: 20,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: theme.colors.border,
+    },
+    dividerText: {
+      marginHorizontal: 16,
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+    },
+    socialButtons: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 20,
+    },
+    socialButton: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 12,
+      borderRadius: 8,
+      backgroundColor: theme.colors.background,
+      borderWidth: 1,
+      borderColor: "#e5e7eb",
+      gap: 8,
+    },
+    socialButtonText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: theme.colors.text,
+    },
+  });
