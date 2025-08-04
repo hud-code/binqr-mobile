@@ -565,7 +565,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   retakeButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -592,7 +592,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     fontWeight: "600",
   },
   photoButton: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     padding: 40,
     borderRadius: 12,
     alignItems: "center",
@@ -705,7 +705,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     alignItems: "center",
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: theme.colors.border,
     gap: 12,
   },
   locationOptionSelected: {
@@ -733,7 +733,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    color: "#374151",
+    color: theme.colors.textSecondary,
     fontWeight: "600",
   },
   submitButton: {
@@ -758,7 +758,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     gap: 24,
   },
   reviewSection: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     padding: 20,
     borderRadius: 12,
     shadowColor: theme.colors.shadow,
@@ -797,7 +797,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     borderRadius: 8,
   },
   qrSection: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     padding: 20,
     borderRadius: 12,
     alignItems: "center",

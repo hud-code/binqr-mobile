@@ -100,7 +100,7 @@ export default function ScanScreen() {
   if (hasPermission === false) {
     return (
       <View style={styles.container}>
-        <Ionicons name="camera-outline" size={64} color="#999" />
+        <Ionicons name="camera-outline" size={64} color={theme.colors.placeholder} />
         <Text style={styles.text}>No access to camera</Text>
         <Text style={styles.subText}>
           Please enable camera permissions in your device settings to scan QR
@@ -121,7 +121,7 @@ export default function ScanScreen() {
       <ScrollView style={styles.container}>
         <View style={styles.boxDetailsContainer}>
           <View style={styles.boxHeader}>
-            <Ionicons name="checkmark-circle" size={48} color="#16a34a" />
+            <Ionicons name="checkmark-circle" size={48} color={theme.colors.success} />
             <Text style={styles.foundTitle}>Box Found!</Text>
           </View>
 
@@ -147,7 +147,7 @@ export default function ScanScreen() {
             <Text style={styles.detailsTitle}>Details</Text>
 
             <View style={styles.detailRow}>
-              <Ionicons name="location" size={20} color="#2563eb" />
+              <Ionicons name="location" size={20} color={theme.colors.primary} />
               <Text style={styles.detailLabel}>Location:</Text>
               <Text style={styles.detailValue}>
                 {foundBox.location?.name || "Unknown Location"}
@@ -155,13 +155,13 @@ export default function ScanScreen() {
             </View>
 
             <View style={styles.detailRow}>
-              <Ionicons name="qr-code" size={20} color="#2563eb" />
+              <Ionicons name="qr-code" size={20} color={theme.colors.primary} />
               <Text style={styles.detailLabel}>QR Code:</Text>
               <Text style={styles.detailValue}>{foundBox.qr_code}</Text>
             </View>
 
             <View style={styles.detailRow}>
-              <Ionicons name="calendar" size={20} color="#2563eb" />
+              <Ionicons name="calendar" size={20} color={theme.colors.primary} />
               <Text style={styles.detailLabel}>Created:</Text>
               <Text style={styles.detailValue}>
                 {formatDate(foundBox.created_at)}
@@ -169,7 +169,7 @@ export default function ScanScreen() {
             </View>
 
             <View style={styles.detailRow}>
-              <Ionicons name="time" size={20} color="#2563eb" />
+              <Ionicons name="time" size={20} color={theme.colors.primary} />
               <Text style={styles.detailLabel}>Updated:</Text>
               <Text style={styles.detailValue}>
                 {formatDate(foundBox.updated_at)}
@@ -192,7 +192,7 @@ export default function ScanScreen() {
 
           <View style={styles.actionsContainer}>
             <TouchableOpacity style={styles.editButton}>
-              <Ionicons name="pencil" size={20} color="#2563eb" />
+              <Ionicons name="pencil" size={20} color={theme.colors.primary} />
               <Text style={styles.editButtonText}>Edit Box</Text>
             </TouchableOpacity>
 
@@ -340,13 +340,13 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    color: "#333",
+    color: theme.colors.text,
     textAlign: "center",
     marginBottom: 10,
   },
   subText: {
     fontSize: 14,
-    color: "#666",
+    color: theme.colors.textSecondary,
     textAlign: "center",
     marginBottom: 20,
     paddingHorizontal: 40,
@@ -378,11 +378,11 @@ const createStyles = (theme: any) => StyleSheet.create({
     marginTop: 12,
   },
   boxCard: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     borderRadius: 12,
     padding: 20,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -396,12 +396,12 @@ const createStyles = (theme: any) => StyleSheet.create({
   boxName: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 8,
   },
   boxDescription: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
     lineHeight: 22,
   },
   boxImage: {
@@ -410,11 +410,11 @@ const createStyles = (theme: any) => StyleSheet.create({
     borderRadius: 8,
   },
   detailsCard: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     borderRadius: 12,
     padding: 20,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -423,7 +423,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   detailsTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 16,
   },
   detailRow: {
@@ -435,20 +435,20 @@ const createStyles = (theme: any) => StyleSheet.create({
   detailLabel: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#666",
+    color: theme.colors.textSecondary,
     minWidth: 80,
   },
   detailValue: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
     flex: 1,
   },
   tagsCard: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     borderRadius: 12,
     padding: 20,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -481,7 +481,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     borderColor: "#2563eb",
     borderWidth: 1,
     paddingVertical: 16,

@@ -128,7 +128,7 @@ export default function BrowseScreen() {
   const renderSearchBar = () => (
     <View style={styles.searchContainer}>
       <View style={styles.searchInputContainer}>
-        <Ionicons name="search" size={20} color="#666" />
+        <Ionicons name="search" size={20} color={theme.colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search boxes by name, contents, description..."
@@ -138,7 +138,7 @@ export default function BrowseScreen() {
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity onPress={() => setSearchQuery("")}>
-            <Ionicons name="close-circle" size={20} color="#666" />
+            <Ionicons name="close-circle" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
         )}
       </View>
@@ -151,14 +151,14 @@ export default function BrowseScreen() {
         style={styles.locationFilterButton}
         onPress={() => setShowLocationFilter(!showLocationFilter)}
       >
-        <Ionicons name="location" size={16} color="#2563eb" />
+        <Ionicons name="location" size={16} color={theme.colors.primary} />
         <Text style={styles.locationFilterText}>
           {selectedLocation === "all" ? "All Locations" : getLocationName(selectedLocation)}
         </Text>
         <Ionicons 
           name={showLocationFilter ? "chevron-up" : "chevron-down"} 
           size={16} 
-          color="#2563eb" 
+          color={theme.colors.primary} 
         />
       </TouchableOpacity>
 
@@ -177,7 +177,7 @@ export default function BrowseScreen() {
             <Ionicons
               name={selectedLocation === "all" ? "radio-button-on" : "radio-button-off"}
               size={20}
-              color={selectedLocation === "all" ? "#2563eb" : "#666"}
+              color={selectedLocation === "all" ? theme.colors.primary : theme.colors.textSecondary}
             />
             <Text
               style={[
@@ -251,7 +251,7 @@ export default function BrowseScreen() {
           <Image source={{ uri: box.photo_urls[0] }} style={styles.boxImage} />
         ) : (
           <View style={styles.placeholderImage}>
-            <Ionicons name="cube" size={24} color="#999" />
+                            <Ionicons name="cube" size={24} color={theme.colors.placeholder} />
           </View>
         )}
       </View>
@@ -267,7 +267,7 @@ export default function BrowseScreen() {
 
         <View style={styles.boxMeta}>
           <View style={styles.boxLocation}>
-            <Ionicons name="location" size={12} color="#666" />
+                              <Ionicons name="location" size={12} color={theme.colors.textSecondary} />
             <Text style={styles.boxLocationText}>
               {getLocationName(box.location_id || "")}
             </Text>
@@ -289,7 +289,7 @@ export default function BrowseScreen() {
         )}
       </View>
 
-      <Ionicons name="chevron-forward" size={16} color="#999" />
+                    <Ionicons name="chevron-forward" size={16} color={theme.colors.placeholder} />
     </TouchableOpacity>
   );
 
@@ -305,7 +305,7 @@ export default function BrowseScreen() {
     if (boxes.length === 0) {
       return (
         <View style={styles.emptyState}>
-          <Ionicons name="cube-outline" size={64} color="#999" />
+          <Ionicons name="cube-outline" size={64} color={theme.colors.placeholder} />
           <Text style={styles.emptyStateTitle}>No Boxes Yet</Text>
           <Text style={styles.emptyStateText}>
             Create your first box to get started organizing your storage
@@ -317,7 +317,7 @@ export default function BrowseScreen() {
     if (filteredBoxes.length === 0) {
       return (
         <View style={styles.emptyState}>
-          <Ionicons name="search" size={64} color="#999" />
+          <Ionicons name="search" size={64} color={theme.colors.placeholder} />
           <Text style={styles.emptyStateTitle}>No Results Found</Text>
           <Text style={styles.emptyStateText}>
             Try adjusting your search terms or filters
@@ -370,9 +370,9 @@ const createStyles = (theme: any) => StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     padding: 20,
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -384,19 +384,19 @@ const createStyles = (theme: any) => StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
   },
   searchContainer: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    borderBottomColor: theme.colors.border,
   },
   searchInputContainer: {
     flexDirection: "row",
@@ -410,14 +410,14 @@ const createStyles = (theme: any) => StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
   },
   filterContainer: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     paddingHorizontal: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    borderBottomColor: theme.colors.border,
   },
   locationFilterButton: {
     flexDirection: "row",
@@ -443,7 +443,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    borderBottomColor: theme.colors.border,
     gap: 12,
   },
   locationOptionSelected: {
@@ -451,7 +451,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   locationOptionText: {
     fontSize: 16,
-    color: "#333",
+    color: theme.colors.text,
   },
   locationOptionTextSelected: {
     color: "#2563eb",
@@ -462,7 +462,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    borderBottomColor: theme.colors.border,
   },
   filterSummaryContent: {
     flexDirection: "row",
@@ -491,7 +491,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
   },
   emptyState: {
     flex: 1,
@@ -503,14 +503,14 @@ const createStyles = (theme: any) => StyleSheet.create({
   emptyStateTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: theme.colors.text,
     marginTop: 16,
     marginBottom: 8,
     textAlign: "center",
   },
   emptyStateText: {
     fontSize: 16,
-    color: "#666",
+    color: theme.colors.textSecondary,
     textAlign: "center",
     lineHeight: 22,
   },
@@ -519,12 +519,12 @@ const createStyles = (theme: any) => StyleSheet.create({
     gap: 12,
   },
   boxItem: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     borderRadius: 12,
     padding: 16,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -554,12 +554,12 @@ const createStyles = (theme: any) => StyleSheet.create({
   boxName: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
+    color: theme.colors.text,
     marginBottom: 4,
   },
   boxDescription: {
     fontSize: 14,
-    color: "#666",
+    color: theme.colors.textSecondary,
     marginBottom: 8,
     lineHeight: 18,
   },
@@ -576,7 +576,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   boxLocationText: {
     fontSize: 12,
-    color: "#666",
+    color: theme.colors.textSecondary,
   },
   boxDate: {
     fontSize: 12,
@@ -601,7 +601,7 @@ const createStyles = (theme: any) => StyleSheet.create({
   },
   moreTagsText: {
     fontSize: 12,
-    color: "#666",
+    color: theme.colors.textSecondary,
     fontStyle: "italic",
   },
 });
