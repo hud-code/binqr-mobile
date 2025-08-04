@@ -205,9 +205,9 @@ const createStyles = (theme: any) => StyleSheet.create({
   passwordContainer: {
     flexDirection: "row",
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: theme.colors.border,
     borderRadius: 8,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.inputBackground,
   },
   passwordInput: {
     flex: 1,
