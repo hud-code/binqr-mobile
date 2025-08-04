@@ -13,8 +13,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function SignUpScreen() {
+  const { theme } = useTheme();
   const { signUp, signInWithApple, signInWithGoogle } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -69,6 +71,8 @@ export default function SignUpScreen() {
       setIsLoading(false);
     }
   };
+
+  const styles = createStyles(theme);
 
   return (
     <KeyboardAvoidingView
@@ -217,10 +221,10 @@ export default function SignUpScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,
@@ -238,7 +242,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
@@ -296,7 +300,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   signUpButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -306,7 +310,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   signUpButtonDisabled: {
-    backgroundColor: "#9ca3af",
+    backgroundColor: theme.colors.disabled,
   },
   signUpButtonText: {
     color: "white",
@@ -321,7 +325,7 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: "#e5e7eb",
+    backgroundColor: theme.colors.border,
   },
   dividerText: {
     marginHorizontal: 16,

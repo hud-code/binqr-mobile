@@ -333,6 +333,8 @@ export default function BrowseScreen() {
     );
   };
 
+  const styles = createStyles(theme);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -359,10 +361,10 @@ export default function BrowseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   content: {
     flex: 1,
@@ -399,7 +401,7 @@ const styles = StyleSheet.create({
   searchInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -431,7 +433,7 @@ const styles = StyleSheet.create({
   },
   locationOptions: {
     marginTop: 8,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     borderRadius: 8,
     overflow: "hidden",
   },
@@ -445,7 +447,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   locationOptionSelected: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
   },
   locationOptionText: {
     fontSize: 16,
@@ -456,7 +458,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   filterSummary: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
@@ -542,7 +544,7 @@ const styles = StyleSheet.create({
   placeholderImage: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.colors.disabled,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -587,7 +589,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tag: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 2,

@@ -28,12 +28,14 @@ import {
 } from "../lib/database";
 import type { Box, Location } from "../lib/types";
 import type { HomeStackParamList } from "../navigation/HomeStack";
+import { useTheme } from "../context/ThemeContext";
 import type { BrowseStackParamList } from "../navigation/BrowseStack";
 
 type BoxDetailsNavigation = StackNavigationProp<HomeStackParamList | BrowseStackParamList, 'BoxDetails'>;
 type BoxDetailsRoute = RouteProp<HomeStackParamList | BrowseStackParamList, 'BoxDetails'>;
 
 export default function BoxDetailsScreen() {
+  const { theme } = useTheme();
   const navigation = useNavigation<BoxDetailsNavigation>();
   const route = useRoute<BoxDetailsRoute>();
   const { box } = route.params;
@@ -350,6 +352,8 @@ export default function BoxDetailsScreen() {
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString();
   };
+
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.container}>
@@ -719,14 +723,14 @@ export default function BoxDetailsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   bottomActionBar: {
     flexDirection: "row",
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     paddingHorizontal: 20,
     paddingVertical: 16,
     paddingBottom: 34, // Account for safe area
@@ -750,7 +754,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   editButton: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     borderWidth: 1,
     borderColor: "#2563eb",
   },
@@ -760,7 +764,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   deleteButton: {
-    backgroundColor: "#fef2f2",
+    backgroundColor: theme.colors.error + "20",
     borderWidth: 1,
     borderColor: "#dc2626",
   },
@@ -770,7 +774,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   printButton: {
-    backgroundColor: "#f0fdf4",
+    backgroundColor: theme.colors.success + "20",
     borderWidth: 1,
     borderColor: "#16a34a",
   },
@@ -780,7 +784,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   saveButton: {
-    backgroundColor: "#16a34a",
+    backgroundColor: theme.colors.success,
   },
   saveButtonText: {
     color: "white",
@@ -788,7 +792,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   cancelButton: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.colors.disabled,
     borderWidth: 1,
     borderColor: "#d1d5db",
   },
@@ -813,7 +817,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 200,
     borderRadius: 12,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.colors.disabled,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -826,7 +830,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 12,
     right: 12,
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 12,
@@ -840,7 +844,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   detailsSection: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     margin: 20,
     marginTop: 0,
     padding: 20,
@@ -866,10 +870,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
   },
   inputReadonly: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     color: "#666",
   },
   textArea: {
@@ -906,7 +910,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   qrSection: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     margin: 20,
     marginTop: 0,
     padding: 20,
@@ -941,7 +945,7 @@ const styles = StyleSheet.create({
   qrActionButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
@@ -954,7 +958,7 @@ const styles = StyleSheet.create({
   },
   // Delete Modal Styles
   deleteModal: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     margin: 20,
     borderRadius: 12,
     maxWidth: "90%",
@@ -983,7 +987,7 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     marginBottom: 20,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
   },
   deleteModalButtons: {
     flexDirection: "row",
@@ -996,7 +1000,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cancelDeleteButton: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.colors.disabled,
   },
   cancelDeleteText: {
     color: "#666",
@@ -1004,10 +1008,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   confirmDeleteButton: {
-    backgroundColor: "#dc2626",
+    backgroundColor: theme.colors.error,
   },
   confirmDeleteButtonDisabled: {
-    backgroundColor: "#d1d5db",
+    backgroundColor: theme.colors.disabled,
   },
   confirmDeleteText: {
     color: "white",
@@ -1025,7 +1029,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   locationModal: {
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     margin: 20,
     borderRadius: 12,
     maxHeight: "70%",
@@ -1053,7 +1057,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     gap: 12,
   },
   addLocationText: {
@@ -1063,7 +1067,7 @@ const styles = StyleSheet.create({
   },
   newLocationForm: {
     padding: 16,
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
   },
@@ -1073,7 +1077,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "white",
+    backgroundColor: theme.colors.surface,
     marginBottom: 12,
   },
   newLocationActions: {
@@ -1084,7 +1088,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 12,
     borderRadius: 8,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.colors.disabled,
     alignItems: "center",
   },
   cancelLocationText: {
@@ -1096,7 +1100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 12,
     borderRadius: 8,
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     alignItems: "center",
   },
   createLocationText: {
@@ -1113,7 +1117,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   locationOptionSelected: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
   },
   locationOptionText: {
     fontSize: 16,

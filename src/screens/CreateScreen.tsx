@@ -483,6 +483,8 @@ export default function CreateScreen() {
     </View>
   );
 
+  const styles = createStyles(theme);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.progressBar}>
@@ -508,10 +510,10 @@ export default function CreateScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   progressBar: {
     flexDirection: "row",
@@ -522,11 +524,11 @@ const styles = StyleSheet.create({
   progressStep: {
     flex: 1,
     height: 4,
-    backgroundColor: "#e5e7eb",
+    backgroundColor: theme.colors.border,
     borderRadius: 2,
   },
   progressStepComplete: {
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
   },
   stepContainer: {
     padding: 20,
@@ -578,7 +580,7 @@ const styles = StyleSheet.create({
   continueButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -652,7 +654,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   textArea: {
     height: 80,
@@ -663,7 +665,7 @@ const styles = StyleSheet.create({
     borderColor: "#2563eb",
     borderRadius: 8,
     padding: 12,
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
   },
   newLocationActions: {
     flexDirection: "row",
@@ -680,7 +682,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   createButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 6,
@@ -694,7 +696,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 8,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     maxHeight: 150,
   },
   locationOption: {
@@ -706,7 +708,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   locationOptionSelected: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
   },
   locationOptionText: {
     fontSize: 16,
@@ -723,7 +725,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     flex: 1,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.colors.disabled,
     paddingVertical: 16,
     borderRadius: 8,
     alignItems: "center",
@@ -735,7 +737,7 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     flex: 2,
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     paddingVertical: 16,
     borderRadius: 8,
     flexDirection: "row",
@@ -744,7 +746,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   submitButtonDisabled: {
-    backgroundColor: "#93c5fd",
+    backgroundColor: theme.colors.disabled,
   },
   submitButtonText: {
     fontSize: 16,
@@ -814,7 +816,7 @@ const styles = StyleSheet.create({
     fontFamily: "monospace",
   },
   saveButton: {
-    backgroundColor: "#16a34a",
+    backgroundColor: theme.colors.success,
     paddingVertical: 16,
     borderRadius: 8,
     alignItems: "center",

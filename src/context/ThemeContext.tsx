@@ -157,3 +157,8 @@ export function useTheme() {
   }
   return context;
 }
+
+// Helper function to create themed styles
+export function createThemedStyles<T>(styleFunction: (theme: Theme) => T) {
+  return styleFunction;
+}

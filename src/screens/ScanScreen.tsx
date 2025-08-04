@@ -87,6 +87,8 @@ export default function ScanScreen() {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const styles = createStyles(theme);
+
   if (hasPermission === null) {
     return (
       <View style={styles.container}>
@@ -247,7 +249,7 @@ export default function ScanScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
@@ -326,7 +328,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   rescanButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -350,7 +352,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   button: {
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
   },
   boxDetailsContainer: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     padding: 20,
   },
   boxHeader: {
@@ -458,7 +460,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tag: {
-    backgroundColor: "#f0f9ff",
+    backgroundColor: theme.colors.primaryLight,
     borderColor: "#2563eb",
     borderWidth: 1,
     borderRadius: 16,
@@ -496,7 +498,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     paddingVertical: 16,
     borderRadius: 8,
     gap: 8,

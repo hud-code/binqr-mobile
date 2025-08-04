@@ -12,8 +12,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function LoginScreen() {
+  const { theme } = useTheme();
   const { signIn, signInWithApple, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,6 +46,8 @@ export default function LoginScreen() {
       setIsLoading(false);
     }
   };
+
+  const styles = createStyles(theme);
 
   return (
     <KeyboardAvoidingView
@@ -146,10 +150,10 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   scrollContent: {
     flexGrow: 1,
@@ -195,14 +199,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   passwordContainer: {
     flexDirection: "row",
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 8,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
   },
   passwordInput: {
     flex: 1,
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   signInButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: theme.colors.primary,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -224,7 +228,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   buttonDisabled: {
-    backgroundColor: "#93c5fd",
+    backgroundColor: theme.colors.disabled,
   },
   buttonText: {
     color: "white",
@@ -249,7 +253,7 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: "#e5e7eb",
+    backgroundColor: theme.colors.border,
   },
   dividerText: {
     marginHorizontal: 16,
@@ -268,7 +272,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: theme.colors.background,
     borderWidth: 1,
     borderColor: "#e5e7eb",
     gap: 8,
