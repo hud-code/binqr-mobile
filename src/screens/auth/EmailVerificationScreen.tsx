@@ -43,8 +43,8 @@ export default function EmailVerificationScreen({
           if (isVerified) {
             setVerificationStatus('verified');
             setIsPolling(false);
-            // Navigate to guided first steps
-            navigation.replace('GuidedSteps');
+            // Don't navigate manually - let AuthStack handle it based on auth state
+            // The AuthStack will automatically navigate based on needsOnboarding state
           } else {
             setVerificationStatus('waiting');
           }

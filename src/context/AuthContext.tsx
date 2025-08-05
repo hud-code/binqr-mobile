@@ -162,7 +162,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (!user) return;
 
     try {
-      console.log("Fetching profile for user:", user.id);
+      console.log("Refreshing profile for user:", user.id);
 
       const { data, error } = await supabase
         .from("profiles")
@@ -171,11 +171,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .single();
 
       if (error) {
-        console.error("Profile fetch error:", error);
+        console.error("Profile refresh error:", error);
         throw error;
       }
 
-      console.log("Profile data fetched:", data);
+      console.log("Profile data refreshed:", data);
       setProfile(data);
     } catch (error) {
       console.error("Error refreshing profile:", error);
@@ -215,6 +215,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (!user || !profile) return;
 
     try {
+      console.log("Completing onboarding for user:", user.id);
+      
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -223,9 +225,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })
         .eq("id", user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error updating profile:", error);
+        throw error;
+      }
 
-      // Refresh profile to update local state
+      console.log("Onboarding completed successfully, refreshing profile...");
+
+      // Update local state immediately to prevent UI lag
+      setProfile(prev => prev ? { ...prev, has_completed_onboarding: true } : null);
+
+      // Also refresh from database to ensure consistency
       await refreshProfile();
     } catch (error) {
       console.error("Error completing onboarding:", error);
@@ -253,11 +263,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
           if (profileError) {
             console.error("Initial profile fetch error:", profileError);
+            
+            // If profile doesn't exist, create it (this handles new signups)
+            if (profileError.code === 'PGRST116') { // No rows returned
+              console.log("Creating new profile for user:", session.user.id);
+              try {
+                const { data: newProfile, error: createError } = await supabase
+                  .from("profiles")
+                  .insert({
+                    id: session.user.id,
+                    email: session.user.email!,
+                    full_name: session.user.user_metadata?.full_name || null,
+                    has_completed_onboarding: false,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                  })
+                  .select()
+                  .single();
+
+                if (createError) {
+                  console.error("Error creating profile:", createError);
+                } else {
+                  console.log("Profile created successfully:", newProfile);
+                  setProfile(newProfile);
+                }
+              } catch (error) {
+                console.error("Failed to create profile:", error);
+              }
+            }
           } else {
             console.log("Initial profile data:", profileData);
-          }
-
-          if (profileData) {
             setProfile(profileData);
           }
         }
@@ -274,26 +309,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        setUser(session.user as AuthUser);
+              if (session?.user) {
+          setUser(session.user as AuthUser);
 
-        // Get profile for new user
-        console.log("Fetching profile for auth change, user:", session.user.id);
-        const { data: profileData, error: profileError } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
+          // Get profile for new user
+          console.log("Fetching profile for auth change, user:", session.user.id);
+          const { data: profileData, error: profileError } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
 
-        if (profileError) {
-          console.error("Auth change profile fetch error:", profileError);
-        } else {
-          console.log("Auth change profile data:", profileData);
-        }
+          if (profileError) {
+            console.error("Auth change profile fetch error:", profileError);
+            
+            // If profile doesn't exist, create it (this handles new signups)
+            if (profileError.code === 'PGRST116') { // No rows returned
+              console.log("Creating new profile for user:", session.user.id);
+              try {
+                const { data: newProfile, error: createError } = await supabase
+                  .from("profiles")
+                  .insert({
+                    id: session.user.id,
+                    email: session.user.email!,
+                    full_name: session.user.user_metadata?.full_name || null,
+                    has_completed_onboarding: false,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                  })
+                  .select()
+                  .single();
 
-        if (profileData) {
-          setProfile(profileData);
-        }
+                if (createError) {
+                  console.error("Error creating profile:", createError);
+                } else {
+                  console.log("Profile created successfully:", newProfile);
+                  setProfile(newProfile);
+                }
+              } catch (error) {
+                console.error("Failed to create profile:", error);
+              }
+            }
+          } else {
+            console.log("Auth change profile data:", profileData);
+            setProfile(profileData);
+          }
       } else {
         setUser(null);
         setProfile(null);
