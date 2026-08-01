@@ -21,8 +21,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     buildNumber: "1",
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
-      CFBundleDisplayName: "BinQR"
-    }
+      CFBundleDisplayName: "BinQR",
+    },
   },
   android: {
     adaptiveIcon: {
@@ -39,14 +39,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "expo-camera",
       {
-        cameraPermission: "Allow BinQR to access your camera to scan QR codes."
-      }
+        cameraPermission:
+          "Allow BinQR to access your camera to scan QR codes and photograph box contents.",
+      },
     ],
     [
       "expo-image-picker",
       {
-        photosPermission: "Allow BinQR to access your photos to select images."
-      }
-    ]
+        photosPermission: "Allow BinQR to access your photos to select images.",
+      },
+    ],
   ],
-}); 
+  extra: {
+    eas: {
+      projectId: "01fb7c7c-c6ae-4c8e-9f9e-03a01a001b08",
+    },
+  },
+});
