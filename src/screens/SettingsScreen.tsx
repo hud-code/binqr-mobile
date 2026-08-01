@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   ScrollView,
   Alert,
   Image,
+  Linking,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -18,18 +20,77 @@ import { isAdmin } from "../lib/admin";
 const APP_VERSION =
   Constants.expoConfig?.version ?? Constants.nativeAppVersion ?? "1.1.2";
 
+const PRIVACY_POLICY_URL =
+  Constants.expoConfig?.extra?.privacyPolicyUrl ??
+  "https://github.com/hud-code/binqr-mobile/blob/main/PRIVACY.md";
+
 export default function SettingsScreen() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, deleteAccount } = useAuth();
   const { theme, themeMode } = useTheme();
   const navigation = useNavigation();
-  
-  const showAdminFeatures = isAdmin(user, profile);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Admin tooling is __DEV__-only (isAdmin always returns false in production)
+  const showAdminFeatures = __DEV__ && isAdmin(user, profile);
 
   const handleSignOut = () => {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
       { text: "Cancel", style: "cancel" },
       { text: "Sign Out", style: "destructive", onPress: signOut },
     ]);
+  };
+
+  const performDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const { error } = await deleteAccount();
+      if (error) {
+        Alert.alert(
+          "Deletion Failed",
+          error.message || "Could not delete your account. Please try again or contact support@binqr.app."
+        );
+        return;
+      }
+      Alert.alert(
+        "Account Deleted",
+        "Your account data has been removed and you have been signed out."
+      );
+    } catch {
+      Alert.alert(
+        "Deletion Failed",
+        "Could not delete your account. Please try again or contact support@binqr.app."
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "This permanently deletes your BinQR account, boxes, locations, and profile data. This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Continue",
+          style: "destructive",
+          onPress: () => {
+            Alert.alert(
+              "Confirm Deletion",
+              'Tap "Delete Account" to permanently erase your data.',
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Delete Account",
+                  style: "destructive",
+                  onPress: performDeleteAccount,
+                },
+              ]
+            );
+          },
+        },
+      ]
+    );
   };
 
   const handleEditProfile = () => {
@@ -40,8 +101,23 @@ export default function SettingsScreen() {
     Alert.alert("Coming Soon", "Notification settings will be available in a future update.");
   };
 
-  const handlePrivacySecurity = () => {
-    Alert.alert("Coming Soon", "Privacy & Security settings will be available in a future update.");
+  const handlePrivacySecurity = async () => {
+    try {
+      const supported = await Linking.canOpenURL(PRIVACY_POLICY_URL);
+      if (!supported) {
+        Alert.alert(
+          "Privacy Policy",
+          `Unable to open the privacy policy. Visit:\n${PRIVACY_POLICY_URL}`
+        );
+        return;
+      }
+      await Linking.openURL(PRIVACY_POLICY_URL);
+    } catch {
+      Alert.alert(
+        "Privacy Policy",
+        `Unable to open the privacy policy. Visit:\n${PRIVACY_POLICY_URL}`
+      );
+    }
   };
 
   const handleBackupSync = () => {
@@ -230,8 +306,8 @@ export default function SettingsScreen() {
 
           <TouchableOpacity style={styles.settingItem} onPress={handlePrivacySecurity}>
             <Ionicons name="lock-closed-outline" size={24} color={theme.colors.primary} />
-            <Text style={styles.settingText}>Privacy & Security</Text>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+            <Text style={styles.settingText}>Privacy Policy</Text>
+            <Ionicons name="open-outline" size={20} color={theme.colors.textSecondary} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.settingItem} onPress={handleAppearance}>
@@ -252,7 +328,7 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Admin Features - Only visible to admin users */}
+        {/* Admin Features - __DEV__ builds only */}
         {showAdminFeatures && (
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { 
@@ -304,15 +380,31 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Sign Out */}
+        {/* Sign Out / Delete Account */}
         <View style={styles.section}>
           <TouchableOpacity
-            style={[styles.settingItem, styles.signOutItem]}
+            style={styles.settingItem}
             onPress={handleSignOut}
+            disabled={isDeleting}
           >
             <Ionicons name="log-out-outline" size={24} color={theme.colors.error} />
             <Text style={[styles.settingText, styles.signOutText]}>
               Sign Out
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.settingItem, styles.signOutItem]}
+            onPress={handleDeleteAccount}
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <ActivityIndicator size="small" color={theme.colors.error} />
+            ) : (
+              <Ionicons name="trash-outline" size={24} color={theme.colors.error} />
+            )}
+            <Text style={[styles.settingText, styles.signOutText]}>
+              {isDeleting ? "Deleting Account..." : "Delete Account"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -322,5 +414,3 @@ export default function SettingsScreen() {
     </ScrollView>
   );
 }
-
-

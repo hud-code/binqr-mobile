@@ -3,9 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SettingsScreen from "../screens/SettingsScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import ThemeSettingsScreen from "../screens/ThemeSettingsScreen";
-import LoginViewerScreen from "../screens/admin/LoginViewerScreen";
-import LoginTesterScreen from "../screens/admin/LoginTesterScreen";
-import LoginFlowGuideScreen from "../screens/admin/LoginFlowGuideScreen";
 import { useTheme } from "../context/ThemeContext";
 
 export type SettingsStackParamList = {
@@ -18,6 +15,17 @@ export type SettingsStackParamList = {
 };
 
 const Stack = createStackNavigator<SettingsStackParamList>();
+
+// Admin screens are only required in development to keep mock tooling out of prod bundles when possible
+const LoginViewerScreen = __DEV__
+  ? require("../screens/admin/LoginViewerScreen").default
+  : null;
+const LoginTesterScreen = __DEV__
+  ? require("../screens/admin/LoginTesterScreen").default
+  : null;
+const LoginFlowGuideScreen = __DEV__
+  ? require("../screens/admin/LoginFlowGuideScreen").default
+  : null;
 
 export default function SettingsStack() {
   const { theme } = useTheme();
@@ -57,30 +65,36 @@ export default function SettingsStack() {
           headerBackTitleVisible: false,
         }} 
       />
-      <Stack.Screen 
-        name="LoginViewer" 
-        component={LoginViewerScreen} 
-        options={{ 
-          title: "Login Page Viewer",
-          headerBackTitleVisible: false,
-        }} 
-      />
-      <Stack.Screen 
-        name="LoginTester" 
-        component={LoginTesterScreen} 
-        options={{ 
-          title: "Login Service Tester",
-          headerBackTitleVisible: false,
-        }} 
-      />
-      <Stack.Screen 
-        name="LoginFlowGuide" 
-        component={LoginFlowGuideScreen} 
-        options={{ 
-          title: "Login Flow Guide",
-          headerBackTitleVisible: false,
-        }} 
-      />
+      {__DEV__ && LoginViewerScreen && (
+        <Stack.Screen 
+          name="LoginViewer" 
+          component={LoginViewerScreen} 
+          options={{ 
+            title: "Login Page Viewer",
+            headerBackTitleVisible: false,
+          }} 
+        />
+      )}
+      {__DEV__ && LoginTesterScreen && (
+        <Stack.Screen 
+          name="LoginTester" 
+          component={LoginTesterScreen} 
+          options={{ 
+            title: "Login Service Tester",
+            headerBackTitleVisible: false,
+          }} 
+        />
+      )}
+      {__DEV__ && LoginFlowGuideScreen && (
+        <Stack.Screen 
+          name="LoginFlowGuide" 
+          component={LoginFlowGuideScreen} 
+          options={{ 
+            title: "Login Flow Guide",
+            headerBackTitleVisible: false,
+          }} 
+        />
+      )}
     </Stack.Navigator>
   );
 }

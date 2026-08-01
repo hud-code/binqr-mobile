@@ -10,12 +10,18 @@ import {
 } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { useTheme } from "../context/ThemeContext";
 import { getBoxByQRCode } from "../lib/database";
 import type { Box } from "../lib/types";
+import type { ScanStackParamList } from "../navigation/ScanStack";
+
+type ScanScreenNavigationProp = StackNavigationProp<ScanStackParamList, "ScanMain">;
 
 export default function ScanScreen() {
   const { theme } = useTheme();
+  const navigation = useNavigation<ScanScreenNavigationProp>();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const [foundBox, setFoundBox] = useState<Box | null>(null);
@@ -58,7 +64,12 @@ export default function ScanScreen() {
       if (box) {
         setFoundBox(box);
         Alert.alert("Box Found!", `Found: ${box.name}`, [
-          { text: "View Details", onPress: () => {} },
+          {
+            text: "View Details",
+            onPress: () => {
+              navigation.navigate("BoxDetails", { box });
+            },
+          },
           { text: "Scan Again", onPress: resetScanner },
         ]);
       } else {
@@ -191,9 +202,12 @@ export default function ScanScreen() {
           )}
 
           <View style={styles.actionsContainer}>
-            <TouchableOpacity style={styles.editButton}>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigation.navigate("BoxDetails", { box: foundBox })}
+            >
               <Ionicons name="pencil" size={20} color={theme.colors.primary} />
-              <Text style={styles.editButtonText}>Edit Box</Text>
+              <Text style={styles.editButtonText}>View Details</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

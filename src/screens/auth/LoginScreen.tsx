@@ -18,7 +18,7 @@ import { useTheme } from "../../context/ThemeContext";
 export default function LoginScreen() {
   const { theme } = useTheme();
   const navigation = useNavigation();
-  const { signIn, signInWithApple, signInWithGoogle } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -117,30 +117,6 @@ export default function LoginScreen() {
               </>
             )}
           </TouchableOpacity>
-
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>Or continue with</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          <View style={styles.socialButtons}>
-            <TouchableOpacity
-              style={styles.socialButton}
-              onPress={signInWithApple}
-            >
-              <Ionicons name="logo-apple" size={20} color="#000" />
-              <Text style={styles.socialButtonText}>Apple</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.socialButton}
-              onPress={signInWithGoogle}
-            >
-              <Ionicons name="logo-google" size={20} color="#4285f4" />
-              <Text style={styles.socialButtonText}>Google</Text>
-            </TouchableOpacity>
-          </View>
 
           <Text style={styles.signUpText}>
             Don't have an account?{" "}
@@ -253,42 +229,5 @@ const createStyles = (theme: any) =>
     signUpLink: {
       color: "#2563eb",
       fontWeight: "600",
-    },
-    divider: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginVertical: 20,
-    },
-    dividerLine: {
-      flex: 1,
-      height: 1,
-      backgroundColor: theme.colors.border,
-    },
-    dividerText: {
-      marginHorizontal: 16,
-      fontSize: 14,
-      color: theme.colors.textSecondary,
-    },
-    socialButtons: {
-      flexDirection: "row",
-      gap: 12,
-      marginBottom: 20,
-    },
-    socialButton: {
-      flex: 1,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingVertical: 12,
-      borderRadius: 8,
-      backgroundColor: theme.colors.background,
-      borderWidth: 1,
-      borderColor: "#e5e7eb",
-      gap: 8,
-    },
-    socialButtonText: {
-      fontSize: 16,
-      fontWeight: "500",
-      color: theme.colors.text,
     },
   });

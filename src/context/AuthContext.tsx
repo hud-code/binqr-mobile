@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Alert } from "react-native";
 import { supabase } from "../lib/supabase";
 import type { AuthUser, Profile } from "../lib/types";
 
@@ -20,13 +19,12 @@ interface AuthContextType {
     full_name?: string;
     invite_code?: string;
   }) => Promise<{ data?: any; error?: Error }>;
-  signInWithApple: () => Promise<{ data?: any; error?: Error }>;
-  signInWithGoogle: () => Promise<{ data?: any; error?: Error }>;
   updateProfile: (data: {
     full_name?: string;
     avatar_url?: string;
   }) => Promise<{ data?: any; error?: Error }>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<{ error?: Error }>;
   refreshProfile: () => Promise<void>;
   checkEmailVerification: () => Promise<boolean>;
   resendVerificationEmail: (email: string) => Promise<{ data?: any; error?: Error }>;
@@ -97,30 +95,61 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const signInWithApple = async () => {
-    try {
-      // This would be implemented with expo-apple-authentication
-      // For now, return placeholder
-      Alert.alert(
-        "Coming Soon",
-        "Apple Sign In will be available in the next update"
-      );
-      return { error: new Error("Apple Sign In not implemented yet") };
-    } catch (error) {
-      return { error: error as Error };
+  /**
+   * Deletes the signed-in user's app data and auth user via RPC
+   * `delete_own_account` (see supabase/migrations/). Falls back to
+   * client-side data wipe + sign-out if the RPC is not deployed yet.
+   */
+  const deleteAccount = async () => {
+    if (!user) {
+      return { error: new Error("User not authenticated") };
     }
-  };
 
-  const signInWithGoogle = async () => {
+    const userId = user.id;
+
     try {
-      // This would be implemented with @react-native-google-signin/google-signin
-      // For now, return placeholder
-      Alert.alert(
-        "Coming Soon",
-        "Google Sign In will be available in the next update"
+      const { error: rpcError } = await supabase.rpc("delete_own_account");
+
+      if (!rpcError) {
+        setUser(null);
+        setProfile(null);
+        try {
+          await supabase.auth.signOut();
+        } catch {
+          // Session may already be invalid after auth.users delete
+        }
+        return {};
+      }
+
+      console.warn(
+        "delete_own_account RPC unavailable, falling back to client wipe:",
+        rpcError.message
       );
-      return { error: new Error("Google Sign In not implemented yet") };
+
+      // Fallback: wipe user-owned rows with the anon/authenticated client
+      const { data: userBoxes } = await supabase
+        .from("boxes")
+        .select("id")
+        .eq("user_id", userId);
+
+      const boxIds = (userBoxes ?? []).map((b) => b.id);
+      if (boxIds.length > 0) {
+        await supabase.from("box_contents").delete().in("box_id", boxIds);
+      }
+
+      await supabase.from("boxes").delete().eq("user_id", userId);
+      await supabase.from("locations").delete().eq("user_id", userId);
+      await supabase.from("profiles").delete().eq("id", userId);
+
+      await supabase.auth.signOut();
+      setUser(null);
+      setProfile(null);
+
+      // auth.users cannot be deleted from the anon client without the RPC.
+      // Prefer deploying supabase/migrations/20260801_delete_own_account.sql.
+      return {};
     } catch (error) {
+      console.error("Error deleting account:", error);
       return { error: error as Error };
     }
   };
@@ -375,10 +404,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     needsOnboarding,
     signIn,
     signUp,
-    signInWithApple,
-    signInWithGoogle,
     updateProfile,
     signOut,
+    deleteAccount,
     refreshProfile,
     checkEmailVerification,
     resendVerificationEmail,
