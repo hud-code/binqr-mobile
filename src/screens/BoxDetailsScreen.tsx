@@ -26,6 +26,7 @@ import {
   generateNewQRCode,
   saveLocation,
 } from "../lib/database";
+import { isLocalImageUri, uploadBoxPhoto } from "../lib/storage";
 import type { Box, Location } from "../lib/types";
 import type { HomeStackParamList } from "../navigation/HomeStack";
 import { useTheme } from "../context/ThemeContext";
@@ -126,10 +127,27 @@ export default function BoxDetailsScreen() {
 
     setIsLoading(true);
     try {
+      // Upload any newly picked local photo before persisting image_url.
+      let photoUrls = editedBox.photo_urls || [];
+      const localPhoto = photoUrls.find((uri) => isLocalImageUri(uri));
+      if (localPhoto) {
+        try {
+          const publicUrl = await uploadBoxPhoto(localPhoto);
+          photoUrls = [publicUrl];
+        } catch (uploadError) {
+          console.error("Photo upload failed:", uploadError);
+          Alert.alert(
+            "Photo upload failed",
+            "Could not upload the new photo. Other box changes were not saved. Check your connection and try again."
+          );
+          return;
+        }
+      }
+
       console.log('Updating box with data:', {
         name: editedBox.name.trim(),
         description: editedBox.description?.trim(),
-        photo_urls: editedBox.photo_urls,
+        photo_urls: photoUrls,
         tags: editedBox.tags,
         location_id: editedBox.location_id,
       });
@@ -137,7 +155,7 @@ export default function BoxDetailsScreen() {
       const updatedBox = await updateBox(editedBox.id, {
         name: editedBox.name.trim(),
         description: editedBox.description?.trim(),
-        photo_urls: editedBox.photo_urls,
+        photo_urls: photoUrls,
         tags: editedBox.tags,
         location_id: editedBox.location_id,
       });
