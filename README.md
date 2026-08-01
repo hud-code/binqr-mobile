@@ -20,13 +20,23 @@ A React Native app for organizing storage boxes with QR codes, built with Expo.
    npm install
    ```
 
-2. **Configure Supabase:**
+2. **Configure Supabase (local `.env`):**
 
-   - Copy `.env.example` to `.env` (`.env` is gitignored) and fill in:
-     ```
-     EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
-     EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-     ```
+   Create an untracked local env file (never commit secrets):
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Then set both values in `.env` from the Supabase Dashboard
+   (**Settings → API**) for project ref `yezhteuapxqomspindaz`:
+
+   ```
+   EXPO_PUBLIC_SUPABASE_URL=https://yezhteuapxqomspindaz.supabase.co
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=<your_anon_key>
+   ```
+
+   Restart Expo after changing `.env` so `EXPO_PUBLIC_*` values reload.
 
 3. **Start development server:**
 
@@ -83,26 +93,33 @@ src/
 
 ### Environment Setup
 
-- Copy `.env.example` to `.env` for local development
-- Copy your web app's Supabase configuration into `.env`
+- Copy `.env.example` to `.env` for local development (`.env` is gitignored)
+- Point the app at Supabase project ref `yezhteuapxqomspindaz`
+- Put only the project URL and anon key in `.env` — never commit real keys
+- Box photos upload to the public `box-photos` Storage bucket at `{user_id}/{uuid}.{ext}`
 - Ensure database schema matches between web and mobile
 - Test authentication flow thoroughly
 
 ### Production / EAS
 
-App config lives in `app.config.ts` (including `extra.eas.projectId`). Do not commit secrets in `eas.json`.
+App config lives in `app.config.ts` (including `extra.eas.projectId`). Do not commit secrets in `eas.json` or `.env`.
 
-For EAS builds (TestFlight / production), set these as EAS Secrets or project environment variables in the Expo dashboard:
+For EAS builds (TestFlight / production), set the same two variables as EAS Secrets
+(or project environment variables) in the Expo dashboard / CLI so production
+builds hit project `yezhteuapxqomspindaz`:
 
 - `EXPO_PUBLIC_SUPABASE_URL`
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 
-Example:
+Example (replace the anon key with the value from Supabase Dashboard → Settings → API):
 
 ```bash
-eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value "https://your-project.supabase.co" --type string
-eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "your_supabase_anon_key" --type string
+eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value "https://yezhteuapxqomspindaz.supabase.co" --type string
+eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "<your_anon_key>" --type string
 ```
+
+List or update existing secrets with `eas secret:list` / `eas secret:delete` as needed.
+Do not paste real anon keys into git, README examples, or PR descriptions.
 
 ### Code Sharing with Web App
 

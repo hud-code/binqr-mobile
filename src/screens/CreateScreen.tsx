@@ -16,6 +16,7 @@ import QRCode from "react-native-qrcode-svg";
 import { v4 as uuidv4 } from "uuid";
 
 import { getStoredLocations, saveBox, saveLocation } from "../lib/database";
+import { uploadBoxPhoto } from "../lib/storage";
 import type { Location, CreateBoxFormData } from "../lib/types";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -116,13 +117,7 @@ export default function CreateScreen() {
   };
 
   const proceedToDetails = () => {
-    if (!capturedImage) {
-      Alert.alert(
-        "Photo Required",
-        "Please add a photo of your box contents first."
-      );
-      return;
-    }
+    // Photo is optional; users can continue without one.
     setStep("details");
   };
 
@@ -175,7 +170,21 @@ export default function CreateScreen() {
       const boxId = uuidv4();
       const qrData = `BinQR:${boxId}`;
 
-      // Prepare box data
+      // Upload photo to Supabase Storage when present. Failure is non-blocking
+      // so the QR / box create flow still completes.
+      let photoUrls: string[] = [];
+      let photoUploadFailed = false;
+      if (capturedImage) {
+        try {
+          const publicUrl = await uploadBoxPhoto(capturedImage);
+          photoUrls = [publicUrl];
+        } catch (uploadError) {
+          console.error("Photo upload failed:", uploadError);
+          photoUploadFailed = true;
+        }
+      }
+
+      // Prepare box data (store public Storage URL, never a local file:// URI)
       const boxData: CreateBoxFormData & { qr_code: string } = {
         name: boxDetails.name.trim(),
         description: boxDetails.description.trim() || undefined,
@@ -186,7 +195,7 @@ export default function CreateScreen() {
               .map((t) => t.trim())
               .filter((t) => t)
           : [],
-        photos: capturedImage ? [capturedImage] : [],
+        photos: photoUrls,
         qr_code: qrData,
       };
 
@@ -196,7 +205,14 @@ export default function CreateScreen() {
       if (savedBox) {
         setGeneratedQR(qrData);
         setStep("review");
-        Alert.alert("Success", "Box created successfully!");
+        if (photoUploadFailed) {
+          Alert.alert(
+            "Box created",
+            "Your box and QR code were saved, but the photo could not be uploaded. You can add a photo later from box details."
+          );
+        } else {
+          Alert.alert("Success", "Box created successfully!");
+        }
       } else {
         Alert.alert("Error", "Failed to create box. Please try again.");
       }
@@ -248,13 +264,22 @@ export default function CreateScreen() {
           </View>
         </View>
       ) : (
-        <TouchableOpacity style={styles.photoButton} onPress={showImageOptions}>
-          <Ionicons name="camera" size={48} color="#2563eb" />
-          <Text style={styles.photoButtonText}>Add Photo</Text>
-          <Text style={styles.photoButtonSubtext}>
-            Tap to take or select photo
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.imageContainer}>
+          <TouchableOpacity style={styles.photoButton} onPress={showImageOptions}>
+            <Ionicons name="camera" size={48} color="#2563eb" />
+            <Text style={styles.photoButtonText}>Add Photo</Text>
+            <Text style={styles.photoButtonSubtext}>
+              Tap to take or select photo (optional)
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.continueButton, { marginTop: 20 }]}
+            onPress={proceedToDetails}
+          >
+            <Text style={styles.continueText}>Skip for now</Text>
+            <Ionicons name="arrow-forward" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
