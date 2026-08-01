@@ -1,51 +1,78 @@
-// Admin utilities for testing features
+// Admin / debug utilities — development builds only.
+// Production UI must not expose these screens (see SettingsScreen / SettingsStack).
 import { AuthUser, Profile } from './types';
 
-// Admin email address - only this user can see admin features
+// Admin email address - only this user can see admin features in __DEV__
 const ADMIN_EMAIL = 'zahudson95@gmail.com';
 
 /**
- * Check if the current user is an admin
+ * Check if the current user can see admin/debug features.
+ * Always false in production builds so tooling never appears in TestFlight/App Store.
  */
 export function isAdmin(user: AuthUser | null, profile: Profile | null): boolean {
+  if (!__DEV__) {
+    return false;
+  }
   return user?.email === ADMIN_EMAIL || profile?.email === ADMIN_EMAIL;
 }
 
 /**
- * Mock authentication service for testing login scenarios
+ * Mock authentication service for testing login scenarios (__DEV__ only).
  */
 export class MockAuthService {
-  private static readonly TEST_ACCOUNTS = {
-    'test@user.com': {
-      password: 'test1234',
+  private static getTestAccountMap(): Record<
+    string,
+    {
+      password: string;
       profile: {
-        id: 'mock-test-user-id',
-        email: 'test@user.com',
-        full_name: 'Test User',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }
+        id: string;
+        email: string;
+        full_name: string;
+        created_at: string;
+        updated_at: string;
+      };
     }
-  };
+  > {
+    if (!__DEV__) {
+      return {};
+    }
+    // Credentials only exist in development JS bundles
+    return {
+      'test@user.com': {
+        password: 'test1234',
+        profile: {
+          id: 'mock-test-user-id',
+          email: 'test@user.com',
+          full_name: 'Test User',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      },
+    };
+  }
 
   /**
    * Simulate login attempt for testing purposes
    */
   static async mockSignIn(email: string, password: string): Promise<{ data?: any; error?: Error }> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (!__DEV__) {
+      return { error: new Error('Mock auth is only available in development') };
+    }
 
-    const testAccount = this.TEST_ACCOUNTS[email as keyof typeof this.TEST_ACCOUNTS];
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const accounts = this.getTestAccountMap();
+    const testAccount = accounts[email];
+
     if (!testAccount) {
       return {
-        error: new Error('Invalid login credentials')
+        error: new Error('Invalid login credentials'),
       };
     }
 
     if (testAccount.password !== password) {
       return {
-        error: new Error('Invalid login credentials')
+        error: new Error('Invalid login credentials'),
       };
     }
 
@@ -57,18 +84,22 @@ export class MockAuthService {
           created_at: testAccount.profile.created_at,
           updated_at: testAccount.profile.updated_at,
         },
-        profile: testAccount.profile
-      }
+        profile: testAccount.profile,
+      },
     };
   }
 
   /**
-   * Get available test accounts for display
+   * Get available test accounts for display (__DEV__ only; no passwords in production).
    */
   static getTestAccounts() {
-    return Object.keys(this.TEST_ACCOUNTS).map(email => ({
+    if (!__DEV__) {
+      return [];
+    }
+    const accounts = this.getTestAccountMap();
+    return Object.keys(accounts).map((email) => ({
       email,
-      password: this.TEST_ACCOUNTS[email as keyof typeof this.TEST_ACCOUNTS].password
+      password: accounts[email].password,
     }));
   }
 }

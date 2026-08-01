@@ -54,5 +54,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     eas: {
       projectId: "01fb7c7c-c6ae-4c8e-9f9e-03a01a001b08",
     },
+    privacyPolicyUrl:
+      "https://github.com/hud-code/binqr-mobile/blob/main/PRIVACY.md",
   },
 });

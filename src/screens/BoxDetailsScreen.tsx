@@ -30,9 +30,16 @@ import type { Box, Location } from "../lib/types";
 import type { HomeStackParamList } from "../navigation/HomeStack";
 import { useTheme } from "../context/ThemeContext";
 import type { BrowseStackParamList } from "../navigation/BrowseStack";
+import type { ScanStackParamList } from "../navigation/ScanStack";
 
-type BoxDetailsNavigation = StackNavigationProp<HomeStackParamList | BrowseStackParamList, 'BoxDetails'>;
-type BoxDetailsRoute = RouteProp<HomeStackParamList | BrowseStackParamList, 'BoxDetails'>;
+type BoxDetailsNavigation = StackNavigationProp<
+  HomeStackParamList & BrowseStackParamList & ScanStackParamList,
+  "BoxDetails"
+>;
+type BoxDetailsRoute = RouteProp<
+  HomeStackParamList & BrowseStackParamList & ScanStackParamList,
+  "BoxDetails"
+>;
 
 export default function BoxDetailsScreen() {
   const { theme } = useTheme();

@@ -7,10 +7,10 @@ import { useTheme } from "../context/ThemeContext";
 import HomeStack from "./HomeStack";
 import BrowseStack from "./BrowseStack";
 import SettingsStack from "./SettingsStack";
+import ScanStack from "./ScanStack";
 
 // Direct Screens
 import CreateScreen from "../screens/CreateScreen";
-import ScanScreen from "../screens/ScanScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -75,7 +75,7 @@ export default function MainTabs() {
       />
       <Tab.Screen
         name="Scan"
-        component={ScanScreen}
+        component={ScanStack}
         options={{ title: "Scan QR" }}
       />
       <Tab.Screen
