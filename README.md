@@ -22,8 +22,7 @@ A React Native app for organizing storage boxes with QR codes, built with Expo.
 
 2. **Configure Supabase:**
 
-   - Update `src/lib/supabase.ts` with your Supabase URL and anon key
-   - Or create a `.env` file (not tracked) with:
+   - Copy `.env.example` to `.env` (`.env` is gitignored) and fill in:
      ```
      EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
      EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -84,9 +83,26 @@ src/
 
 ### Environment Setup
 
-- Copy your web app's Supabase configuration
+- Copy `.env.example` to `.env` for local development
+- Copy your web app's Supabase configuration into `.env`
 - Ensure database schema matches between web and mobile
 - Test authentication flow thoroughly
+
+### Production / EAS
+
+App config lives in `app.config.ts` (including `extra.eas.projectId`). Do not commit secrets in `eas.json`.
+
+For EAS builds (TestFlight / production), set these as EAS Secrets or project environment variables in the Expo dashboard:
+
+- `EXPO_PUBLIC_SUPABASE_URL`
+- `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+
+Example:
+
+```bash
+eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value "https://your-project.supabase.co" --type string
+eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "your_supabase_anon_key" --type string
+```
 
 ### Code Sharing with Web App
 

@@ -9,10 +9,14 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Constants from "expo-constants";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useNavigation } from "@react-navigation/native";
 import { isAdmin } from "../lib/admin";
+
+const APP_VERSION =
+  Constants.expoConfig?.version ?? Constants.nativeAppVersion ?? "1.1.2";
 
 export default function SettingsScreen() {
   const { user, profile, signOut } = useAuth();
@@ -51,7 +55,7 @@ export default function SettingsScreen() {
   const handleAbout = () => {
     Alert.alert(
       "About BinQR",
-      "BinQR helps you organize and track your storage boxes using QR codes.\n\nVersion 1.0.0\n\nMade with ❤️ for better organization."
+      `BinQR helps you organize and track your storage boxes using QR codes.\n\nVersion ${APP_VERSION}\n\nMade with ❤️ for better organization.`
     );
   };
 
@@ -313,7 +317,7 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.version}>Version 1.0.0</Text>
+        <Text style={styles.version}>Version {APP_VERSION}</Text>
       </View>
     </ScrollView>
   );
