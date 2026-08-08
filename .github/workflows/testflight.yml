@@ -1,0 +1,113 @@
+# Ship iOS production builds to TestFlight via EAS Build + EAS Submit (auto-submit).
+#
+# Required GitHub Actions secrets (same names as hud-code/debt-destroyer ASC setup):
+#   EXPO_TOKEN                          — Expo personal access token (expo.dev → Access tokens)
+#   APP_STORE_CONNECT_API_KEY_ID        — ASC API key ID (maps to EXPO_ASC_KEY_ID)
+#   APP_STORE_CONNECT_API_KEY_ISSUER_ID — ASC API key issuer ID (maps to EXPO_ASC_ISSUER_ID)
+#   APP_STORE_CONNECT_API_KEY_CONTENT   — Full .p8 key file contents (written to EXPO_ASC_API_KEY_PATH)
+#
+# Optional until ascAppId is committed in eas.json:
+#   ASC_APP_ID                          — Numeric App Store Connect app Apple ID (ascAppId)
+#
+# iOS signing credentials (distribution cert, provisioning profile) are managed by EAS,
+# not stored in GitHub. Run a local `eas build -p ios --profile production` once before CI.
+
+name: TestFlight (EAS)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "LICENSE"
+      - ".gitignore"
+
+permissions:
+  contents: read
+
+jobs:
+  testflight:
+    name: EAS iOS production → TestFlight
+    runs-on: ubuntu-latest
+    env:
+      ASC_KEY_FILE: ${{ runner.temp }}/AuthKey.p8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure ascAppId from secret (optional)
+        env:
+          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
+        run: |
+          if [ -n "$ASC_APP_ID" ]; then
+            jq --arg id "$ASC_APP_ID" '.submit.production.ios.ascAppId = $id' eas.json > eas.json.tmp
+            mv eas.json.tmp eas.json
+            echo "Set submit.production.ios.ascAppId from ASC_APP_ID secret."
+          else
+            echo "ASC_APP_ID secret not set; using ascAppId from eas.json if present."
+          fi
+
+      - name: Write App Store Connect API key
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: |
+          if [ -z "$APP_STORE_CONNECT_API_KEY_CONTENT" ]; then
+            echo "::error::APP_STORE_CONNECT_API_KEY_CONTENT secret is required for non-interactive submit."
+            exit 1
+          fi
+          printf '%s\n' "$APP_STORE_CONNECT_API_KEY_CONTENT" > "$ASC_KEY_FILE"
+          chmod 600 "$ASC_KEY_FILE"
+
+      - name: EAS Build (iOS) with auto-submit to TestFlight
+        id: eas_build
+        env:
+          EXPO_ASC_API_KEY_PATH: ${{ env.ASC_KEY_FILE }}
+          EXPO_ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          EXPO_ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          # --no-wait: trigger build on EAS cloud and exit (submit runs when build completes).
+          # See https://docs.expo.dev/build/automate-submissions/ and https://docs.expo.dev/build/building-on-ci/
+          BUILD_JSON=$(eas build -p ios --profile production --non-interactive --auto-submit --no-wait --json)
+          echo "$BUILD_JSON" | jq .
+
+          BUILD_URL=$(echo "$BUILD_JSON" | jq -r 'if type == "array" then .[0].buildDetailsPageUrl // .[0].logsUrl else .buildDetailsPageUrl // .logsUrl end // empty')
+          if [ -z "$BUILD_URL" ]; then
+            BUILD_URL=$(echo "$BUILD_JSON" | grep -Eo 'https://expo.dev/[^"]+' | head -1 || true)
+          fi
+
+          if [ -n "$BUILD_URL" ]; then
+            echo "build_url=$BUILD_URL" >> "$GITHUB_OUTPUT"
+            {
+              echo "## EAS iOS build"
+              echo ""
+              echo "Production build triggered with \`--auto-submit\` (TestFlight when the build finishes on EAS)."
+              echo ""
+              echo "**Build:** [$BUILD_URL]($BUILD_URL)"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Could not parse build URL from EAS output; check the job logs."
+          fi
+
+      - name: Remove App Store Connect API key
+        if: always()
+        run: rm -f "$ASC_KEY_FILE"

@@ -121,6 +121,24 @@ eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "<your_anon_key>"
 List or update existing secrets with `eas secret:list` / `eas secret:delete` as needed.
 Do not paste real anon keys into git, README examples, or PR descriptions.
 
+### TestFlight CI (GitHub Actions + EAS)
+
+Pushes to `main` (excluding markdown-only changes) and manual **Run workflow** trigger [`.github/workflows/testflight.yml`](.github/workflows/testflight.yml). That workflow runs on `ubuntu-latest`, installs dependencies, and starts an EAS cloud iOS production build with `--auto-submit --no-wait`. When the build finishes on EAS, submission goes to TestFlight using the `production` submit profile in `eas.json`.
+
+**GitHub repository secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Purpose |
+| --- | --- |
+| `EXPO_TOKEN` | Expo personal access token for EAS CLI in CI |
+| `APP_STORE_CONNECT_API_KEY_ID` | App Store Connect API key ID → `EXPO_ASC_KEY_ID` |
+| `APP_STORE_CONNECT_API_KEY_ISSUER_ID` | ASC issuer ID → `EXPO_ASC_ISSUER_ID` |
+| `APP_STORE_CONNECT_API_KEY_CONTENT` | Full `.p8` key contents (written to a temp file → `EXPO_ASC_API_KEY_PATH`) |
+| `ASC_APP_ID` | *(Optional)* Numeric App Store Connect app Apple ID (`ascAppId`). Required for auto-submit in CI until you commit `submit.production.ios.ascAppId` in `eas.json`. [How to find ascAppId](https://expo.fyi/asc-app-id). |
+
+iOS distribution certificates and provisioning profiles are **not** checked into GitHub. EAS manages credentials remotely after you complete at least one interactive `eas build -p ios --profile production` locally (or via the Expo dashboard).
+
+Set `EXPO_PUBLIC_*` Supabase variables as [EAS Secrets](https://docs.expo.dev/build-reference/variables/) for production builds; the TestFlight workflow does not embed them.
+
 ### Code Sharing with Web App
 
 - Share types from `src/lib/types.ts`
