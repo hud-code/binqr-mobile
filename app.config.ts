@@ -49,6 +49,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         photosPermission: "Allow BinQR to access your photos to select images.",
       },
     ],
+    // Local plugin: patches fmt so the iOS native build compiles under Xcode 26.
+    "./plugins/withFmtXcode26Fix",
   ],
   extra: {
     eas: {
