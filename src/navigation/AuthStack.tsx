@@ -15,7 +15,15 @@ import GuidedStepsScreen from "../screens/onboarding/GuidedStepsScreen";
 // Main app tabs (we'll import this when we create it)
 import MainTabs from "./MainTabs";
 
-const Stack = createStackNavigator();
+export type AuthStackParamList = {
+  Login: undefined;
+  SignUp: undefined;
+  EmailVerification: { email?: string };
+  GuidedSteps: undefined;
+  MainApp: undefined;
+};
+
+const Stack = createStackNavigator<AuthStackParamList>();
 
 function LoadingScreen() {
   const { theme } = useTheme();

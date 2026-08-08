@@ -14,8 +14,8 @@ import { useTheme } from "../../context/ThemeContext";
 interface EmailVerificationScreenProps {
   navigation: any;
   route: {
-    params: {
-      email: string;
+    params?: {
+      email?: string;
     };
   };
 }

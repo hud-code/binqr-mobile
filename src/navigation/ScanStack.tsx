@@ -41,7 +41,7 @@ export default function ScanStack() {
         component={BoxDetailsScreen}
         options={{
           title: "Box Details",
-          headerBackTitleVisible: false,
+          headerBackTitle: "",
         }}
       />
     </Stack.Navigator>

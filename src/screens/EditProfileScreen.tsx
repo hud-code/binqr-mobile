@@ -132,8 +132,13 @@ export default function EditProfileScreen({ navigation }: any) {
           text: "Send Email",
           onPress: async () => {
             try {
+              const userEmail = profile?.email;
+              if (!userEmail) {
+                Alert.alert("Error", "No email on file for this account.");
+                return;
+              }
               const { error } = await supabase.auth.resetPasswordForEmail(
-                profile?.email || email
+                userEmail
               );
 
               if (error) throw error;
