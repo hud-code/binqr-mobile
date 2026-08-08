@@ -32,8 +32,6 @@ jobs:
   testflight:
     name: EAS iOS production → TestFlight
     runs-on: ubuntu-latest
-    env:
-      ASC_KEY_FILE: ${{ runner.temp }}/AuthKey.p8
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,13 +72,14 @@ jobs:
             echo "::error::APP_STORE_CONNECT_API_KEY_CONTENT secret is required for non-interactive submit."
             exit 1
           fi
+          ASC_KEY_FILE="$RUNNER_TEMP/AuthKey.p8"
           printf '%s\n' "$APP_STORE_CONNECT_API_KEY_CONTENT" > "$ASC_KEY_FILE"
           chmod 600 "$ASC_KEY_FILE"
 
       - name: EAS Build (iOS) with auto-submit to TestFlight
         id: eas_build
         env:
-          EXPO_ASC_API_KEY_PATH: ${{ env.ASC_KEY_FILE }}
+          EXPO_ASC_API_KEY_PATH: ${{ runner.temp }}/AuthKey.p8
           EXPO_ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           EXPO_ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
         run: |
@@ -110,4 +109,4 @@ jobs:
 
       - name: Remove App Store Connect API key
         if: always()
-        run: rm -f "$ASC_KEY_FILE"
+        run: rm -f "$RUNNER_TEMP/AuthKey.p8"
