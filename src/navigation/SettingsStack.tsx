@@ -54,7 +54,7 @@ export default function SettingsStack() {
         component={EditProfileScreen} 
         options={{ 
           title: "Edit Profile",
-          headerBackTitleVisible: false,
+          headerBackTitle: "",
         }} 
       />
       <Stack.Screen 
@@ -62,7 +62,7 @@ export default function SettingsStack() {
         component={ThemeSettingsScreen} 
         options={{ 
           title: "Appearance",
-          headerBackTitleVisible: false,
+          headerBackTitle: "",
         }} 
       />
       {__DEV__ && LoginViewerScreen && (
@@ -71,7 +71,7 @@ export default function SettingsStack() {
           component={LoginViewerScreen} 
           options={{ 
             title: "Login Page Viewer",
-            headerBackTitleVisible: false,
+            headerBackTitle: "",
           }} 
         />
       )}
@@ -81,7 +81,7 @@ export default function SettingsStack() {
           component={LoginTesterScreen} 
           options={{ 
             title: "Login Service Tester",
-            headerBackTitleVisible: false,
+            headerBackTitle: "",
           }} 
         />
       )}
@@ -91,7 +91,7 @@ export default function SettingsStack() {
           component={LoginFlowGuideScreen} 
           options={{ 
             title: "Login Flow Guide",
-            headerBackTitleVisible: false,
+            headerBackTitle: "",
           }} 
         />
       )}

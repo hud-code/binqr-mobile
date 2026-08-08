@@ -89,7 +89,7 @@ export default function LoginFlowGuideScreen() {
       position: "absolute",
       top: -8,
       right: -8,
-      backgroundColor: theme.colors.accent || theme.colors.primary,
+      backgroundColor: theme.colors.warning,
       width: 24,
       height: 24,
       borderRadius: 12,

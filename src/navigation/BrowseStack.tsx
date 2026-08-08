@@ -41,7 +41,7 @@ export default function BrowseStack() {
         component={BoxDetailsScreen} 
         options={{ 
           title: "Box Details",
-          headerBackTitleVisible: false,
+          headerBackTitle: "",
         }} 
       />
     </Stack.Navigator>

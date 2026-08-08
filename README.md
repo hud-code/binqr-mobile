@@ -147,7 +147,7 @@ Set `EXPO_PUBLIC_*` Supabase variables as [EAS Secrets](https://docs.expo.dev/bu
 
 ## 📦 Key Dependencies
 
-- **Expo SDK 53** - Development platform
+- **Expo SDK 54** - Development platform (Xcode 26 / iOS 26 SDK for App Store Connect)
 - **React Navigation** - Navigation system
 - **Expo Camera** - QR scanning and photo capture
 - **Supabase** - Backend and authentication
