@@ -125,14 +125,6 @@ has a few extra requirements. Common gotchas:
   `/bin/sh: /path/to/your: No such file or directory`. Clone/build from a path
   with no spaces (e.g. `~/code/binqr-mobile`, not `~/My Projects/binqr-mobile`).
 
-- **Xcode 26 / newer Clang + fmt:** RN 0.79.x pins `fmt` 11.0.2, which fails to
-  compile under Xcode 26 (`call to consteval function ... is not a constant
-  expression`). This is handled automatically by the
-  [`withFmtXcode26Fix`](plugins/withFmtXcode26Fix.js) config plugin, which
-  patches `fmt` during `pod install`. No manual step needed; remove the plugin
-  once the project upgrades to a React Native / fmt version that builds cleanly
-  under Xcode 26.
-
 ### Production / EAS
 
 App config lives in `app.config.ts` (including `extra.eas.projectId`). Do not commit secrets in `eas.json` or `.env`.
